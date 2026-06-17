@@ -1,0 +1,43 @@
+{
+  "nav": {
+    "carta": "Menu",
+    "reservas": "Reservations",
+    "info": "Information",
+    "galeria": "Gallery"
+  },
+  "carta": {
+    "titulo": "Our Menu",
+    "sin_foto": "No image available",
+    "vegano": "Vegan",
+    "sin_gluten": "Gluten Free",
+    "alergenos": "Allergens",
+    "encargo_nota": "Ask for availability",
+    "llevar": "Takeaway"
+  },
+  "reservas": {
+    "titulo": "Book a Table",
+    "nombre": "Full name",
+    "email": "Email address",
+    "telefono": "Phone",
+    "fecha": "Date",
+    "hora": "Time",
+    "personas": "Number of guests",
+    "notas": "Additional notes",
+    "enviar": "Confirm Reservation",
+    "exito": "Reservation received! We will contact you to confirm.",
+    "error": "Error sending reservation. Please try again."
+  },
+  "info": {
+    "titulo": "The Restaurant",
+    "horario": "Opening Hours",
+    "direccion": "Address",
+    "telefono": "Phone",
+    "como_llegar": "How to Get Here"
+  },
+  "galeria": {
+    "titulo": "Gallery"
+  },
+  "footer": {
+    "derechos": "All rights reserved"
+  }
+}

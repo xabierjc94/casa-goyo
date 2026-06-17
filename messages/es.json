@@ -1,0 +1,43 @@
+{
+  "nav": {
+    "carta": "Carta",
+    "reservas": "Reservas",
+    "info": "Información",
+    "galeria": "Galería"
+  },
+  "carta": {
+    "titulo": "Nuestra Carta",
+    "sin_foto": "Sin imagen disponible",
+    "vegano": "Vegano",
+    "sin_gluten": "Sin Gluten",
+    "alergenos": "Alérgenos",
+    "encargo_nota": "Consultar disponibilidad",
+    "llevar": "Para llevar"
+  },
+  "reservas": {
+    "titulo": "Reservar Mesa",
+    "nombre": "Nombre completo",
+    "email": "Correo electrónico",
+    "telefono": "Teléfono",
+    "fecha": "Fecha",
+    "hora": "Hora",
+    "personas": "Número de personas",
+    "notas": "Notas adicionales",
+    "enviar": "Confirmar Reserva",
+    "exito": "¡Reserva recibida! Te contactaremos para confirmar.",
+    "error": "Error al enviar la reserva. Inténtalo de nuevo."
+  },
+  "info": {
+    "titulo": "El Restaurante",
+    "horario": "Horario",
+    "direccion": "Dirección",
+    "telefono": "Teléfono",
+    "como_llegar": "Cómo Llegar"
+  },
+  "galeria": {
+    "titulo": "Galería"
+  },
+  "footer": {
+    "derechos": "Todos los derechos reservados"
+  }
+}
