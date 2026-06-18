@@ -1,0 +1,12 @@
+<svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="80" fill="#FAF0E6"/>
+
+  <!-- Text: Casa Goyo -->
+  <text x="100" y="45" font-family="serif" font-size="32" font-weight="bold" fill="#7B1527" text-anchor="middle">
+    Casa Goyo
+  </text>
+
+  <!-- Decorative line -->
+  <line x1="30" y1="55" x2="170" y2="55" stroke="#F0A500" stroke-width="2"/>
+</svg>

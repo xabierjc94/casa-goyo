@@ -1,6 +1,8 @@
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
 import type { Metadata } from "next"
+import Navbar from "@/components/shared/Navbar"
+import Footer from "@/components/shared/Footer"
 
 export const metadata: Metadata = {
   title: "Restaurante Casa Goyo — Alcocer, Guadalajara",
@@ -19,7 +21,9 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      {children}
+      <Navbar />
+      <main>{children}</main>
+      <Footer />
     </NextIntlClientProvider>
   )
 }
