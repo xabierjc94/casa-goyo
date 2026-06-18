@@ -4,8 +4,15 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { Menu, X } from "lucide-react"
+
+const NAVBAR_LINKS = [
+  { href: (locale: string) => `/${locale}`, label: "carta" },
+  { href: (locale: string) => `/${locale}/reservas`, label: "reservas" },
+  { href: (locale: string) => `/${locale}/info`, label: "info" },
+  { href: (locale: string) => `/${locale}/galeria`, label: "galeria" },
+]
 
 export default function Navbar() {
   const t = useTranslations("nav")
@@ -14,18 +21,16 @@ export default function Navbar() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
 
-  const links = [
-    { href: `/${locale}`, label: t("carta") },
-    { href: `/${locale}/reservas`, label: t("reservas") },
-    { href: `/${locale}/info`, label: t("info") },
-    { href: `/${locale}/galeria`, label: t("galeria") },
-  ]
+  const links = NAVBAR_LINKS.map((link) => ({
+    href: link.href(locale),
+    label: t(link.label),
+  }))
 
-  function toggleLocale() {
+  const toggleLocale = useCallback(() => {
     const newLocale = locale === "es" ? "en" : "es"
     const newPath = pathname.replace(`/${locale}`, `/${newLocale}`)
     router.push(newPath)
-  }
+  }, [locale, pathname, router])
 
   return (
     <nav className="sticky top-0 z-50 bg-crema/95 backdrop-blur border-b border-dorado/20">
@@ -56,6 +61,7 @@ export default function Navbar() {
           <button
             onClick={toggleLocale}
             className="ml-4 px-3 py-1 border border-burdeos text-burdeos text-xs font-bold rounded hover:bg-burdeos hover:text-crema transition-colors"
+            aria-label={locale === "es" ? "Switch to English" : "Switch to Spanish"}
           >
             {locale === "es" ? "EN" : "ES"}
           </button>
@@ -66,6 +72,7 @@ export default function Navbar() {
           className="md:hidden p-2 text-carbon hover:text-burdeos transition-colors"
           onClick={() => setOpen(!open)}
           aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
         >
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -73,7 +80,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {open && (
-        <div className="md:hidden bg-crema border-t border-dorado/20 px-4 py-4 flex flex-col gap-4">
+        <div className="md:hidden bg-crema border-t border-dorado/20 px-4 py-4 flex flex-col gap-4" role="navigation" aria-label="Mobile navigation">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -90,6 +97,7 @@ export default function Navbar() {
               setOpen(false)
             }}
             className="text-left text-burdeos font-bold text-sm hover:text-burdeos-dark transition-colors"
+            aria-label={locale === "es" ? "Switch to English" : "Switch to Spanish"}
           >
             {locale === "es" ? "Switch to English" : "Cambiar a Español"}
           </button>
