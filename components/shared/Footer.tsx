@@ -1,14 +1,13 @@
-"use client"
-
-import { useTranslations } from "next-intl"
-import { useLocale } from "next-intl"
+import { getTranslations, getLocale } from "next-intl/server"
 import Link from "next/link"
 
-const CURRENT_YEAR = new Date().getFullYear()
+export default async function Footer() {
+  const [t, locale] = await Promise.all([
+    getTranslations("footer"),
+    getLocale(),
+  ])
 
-export default function Footer() {
-  const t      = useTranslations("footer")
-  const locale = useLocale()
+  const year = new Date().getFullYear()
 
   return (
     <footer className="bg-carbon text-crema mt-24">
@@ -50,9 +49,9 @@ export default function Footer() {
             </p>
             <ul className="space-y-2.5">
               {[
-                { href: `/${locale}`,          label: "Carta" },
-                { href: `/${locale}/info`,      label: "Información" },
-                { href: `/${locale}/galeria`,   label: "Galería" },
+                { href: `/${locale}`,         label: "Carta" },
+                { href: `/${locale}/info`,    label: "Información" },
+                { href: `/${locale}/galeria`, label: "Galería" },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link
@@ -96,7 +95,7 @@ export default function Footer() {
             className="text-crema/25 text-[10px] tracking-widest uppercase"
             style={{ fontFamily: "var(--font-josefin), sans-serif" }}
           >
-            © {CURRENT_YEAR} Casa Goyo — {t("derechos")}
+            © {year} Casa Goyo — {t("derechos")}
           </p>
           <div
             className="text-[10px] tracking-[0.2em] text-dorado/50 uppercase"

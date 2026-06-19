@@ -1,9 +1,14 @@
 import { createClient } from "@/lib/supabase/server"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import GaleriaGrid from "@/components/galeria/GaleriaGrid"
 
+export const revalidate = 3600
+
 export default async function GaleriaPage() {
-  const t        = await getTranslations("galeria")
+  const [t, locale] = await Promise.all([
+    getTranslations("galeria"),
+    getLocale() as Promise<"es" | "en">,
+  ])
   const supabase = await createClient()
 
   const { data: fotos } = await supabase
@@ -26,7 +31,7 @@ export default async function GaleriaPage() {
         <div className="divider-ornamental max-w-xs mx-auto">◆</div>
       </div>
 
-      <GaleriaGrid fotos={fotos ?? []} />
+      <GaleriaGrid fotos={fotos ?? []} locale={locale} />
     </div>
   )
 }

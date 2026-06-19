@@ -1,26 +1,22 @@
-"use client"
-
-import { motion } from "framer-motion"
-import { useLocale, useTranslations } from "next-intl"
 import { ALERGENOS_LABELS, formatPrecio } from "@/lib/utils"
 import type { Plato } from "@/lib/supabase/types"
 
-type Props = { plato: Plato; index?: number }
+const DIET_LABELS = {
+  es: { vegano: "Vegano", sinGluten: "Sin Gluten" },
+  en: { vegano: "Vegan",  sinGluten: "Gluten Free" },
+} as const
 
-export default function CardPlato({ plato, index = 0 }: Props) {
-  const locale = useLocale() as "es" | "en"
-  const t      = useTranslations("carta")
+type Props = { plato: Plato; locale: "es" | "en"; index?: number }
 
-  const nombre     = locale === "es" ? plato.nombre_es : plato.nombre_en
+export default function CardPlato({ plato, locale, index = 0 }: Props) {
+  const nombre      = locale === "es" ? plato.nombre_es : plato.nombre_en
   const descripcion = locale === "es" ? plato.descripcion_es : plato.descripcion_en
+  const labels      = DIET_LABELS[locale]
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.45, delay: index * 0.06 }}
-      className="group border-b border-burdeos/8 py-5 last:border-b-0 hover:bg-dorado/[0.03] transition-colors duration-300 px-1"
+    <article
+      className="animate-fade-up group border-b border-burdeos/8 py-5 last:border-b-0 hover:bg-dorado/[0.03] transition-colors duration-300 px-1"
+      style={{ animationDelay: `${index * 55}ms` }}
     >
       <div className="flex items-baseline justify-between gap-4 mb-1">
         <h3
@@ -29,7 +25,6 @@ export default function CardPlato({ plato, index = 0 }: Props) {
         >
           {nombre}
         </h3>
-
         <span
           className="shrink-0 text-[0.85rem] font-light tracking-wide text-dorado tabular-nums"
           style={{ fontFamily: "var(--font-josefin), sans-serif" }}
@@ -54,7 +49,7 @@ export default function CardPlato({ plato, index = 0 }: Props) {
               className="text-[0.65rem] tracking-[0.15em] uppercase text-green-700"
               style={{ fontFamily: "var(--font-josefin), sans-serif" }}
             >
-              · {t("vegano")}
+              · {labels.vegano}
             </span>
           )}
           {plato.sin_gluten && (
@@ -62,7 +57,7 @@ export default function CardPlato({ plato, index = 0 }: Props) {
               className="text-[0.65rem] tracking-[0.15em] uppercase text-amber-700"
               style={{ fontFamily: "var(--font-josefin), sans-serif" }}
             >
-              · {t("sin_gluten")}
+              · {labels.sinGluten}
             </span>
           )}
           {plato.alergenos.map((a) => (
@@ -76,6 +71,6 @@ export default function CardPlato({ plato, index = 0 }: Props) {
           ))}
         </div>
       )}
-    </motion.article>
+    </article>
   )
 }

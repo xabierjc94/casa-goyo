@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { getTranslations, getLocale } from "next-intl/server"
+
+export const revalidate = 3600
 import { Phone, MapPin, Clock } from "lucide-react"
 
 export default async function InfoPage() {
