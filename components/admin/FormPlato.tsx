@@ -153,9 +153,16 @@ export default function FormPlato({ secciones, plato, onSaved, onCancel }: FormP
         if (error) throw new Error(`Error updating plato: ${error.message}`)
         toast.success("Plato actualizado correctamente")
       } else {
-        // Create new plato
-        const { error } = await supabase.from("platos").insert([platoData])
+        // Place new plato at the end of the list
+        const { data: last } = await supabase
+          .from("platos")
+          .select("orden")
+          .order("orden", { ascending: false })
+          .limit(1)
+          .maybeSingle()
+        const orden = (last?.orden ?? 0) + 1
 
+        const { error } = await supabase.from("platos").insert([{ ...platoData, orden }])
         if (error) throw new Error(`Error creating plato: ${error.message}`)
         toast.success("Plato creado correctamente")
       }
