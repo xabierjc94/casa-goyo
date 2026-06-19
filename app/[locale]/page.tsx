@@ -70,13 +70,16 @@ export default async function CartaPage() {
   })
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-8">
+    <main className="max-w-3xl mx-auto px-4 pt-14 pb-16">
       {/* Page Title */}
-      <h1 className="font-serif text-4xl text-burdeos text-center mb-2">
-        {t("titulo")}
-      </h1>
-      <div className="flex justify-center mb-8">
-        <div className="w-24 h-0.5 bg-dorado" />
+      <div className="text-center mb-12">
+        <h1
+          className="text-5xl md:text-6xl font-light italic text-burdeos mb-5"
+          style={{ fontFamily: "var(--font-cormorant), Georgia, serif" }}
+        >
+          {t("titulo")}
+        </h1>
+        <div className="divider-ornamental max-w-xs mx-auto">◆</div>
       </div>
 
       {/* Navigation */}

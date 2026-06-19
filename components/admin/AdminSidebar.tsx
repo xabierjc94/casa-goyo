@@ -4,22 +4,25 @@ import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { useState } from "react"
-import { Menu, X, LogOut } from "lucide-react"
+import { Menu, X, LogOut, LayoutDashboard, BookOpen, CalendarDays, Images, Info } from "lucide-react"
 import { toast } from "sonner"
 
 const ADMIN_LINKS = [
-  { href: "/admin", label: "Panel", icon: "📊" },
-  { href: "/admin/carta", label: "Carta", icon: "📖" },
-  { href: "/admin/reservas", label: "Reservas", icon: "📅" },
-  { href: "/admin/galeria", label: "Galería", icon: "🖼️" },
-  { href: "/admin/info", label: "Información", icon: "ℹ️" },
+  { href: "/admin",         label: "Panel",       icon: LayoutDashboard, exact: true },
+  { href: "/admin/carta",   label: "Carta",       icon: BookOpen,        exact: false },
+  { href: "/admin/reservas",label: "Reservas",    icon: CalendarDays,    exact: false },
+  { href: "/admin/galeria", label: "Galería",     icon: Images,          exact: false },
+  { href: "/admin/info",    label: "Información", icon: Info,            exact: false },
 ]
 
 export default function AdminSidebar() {
   const pathname = usePathname()
-  const router = useRouter()
-  const [open, setOpen] = useState(false)
+  const router   = useRouter()
+  const [open,       setOpen]       = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
+
+  const isActive = (href: string, exact: boolean) =>
+    exact ? pathname === href : pathname.startsWith(href)
 
   const handleLogout = async () => {
     setLoggingOut(true)
@@ -28,87 +31,90 @@ export default function AdminSidebar() {
       await supabase.auth.signOut()
       router.push("/admin/login")
       router.refresh()
-    } catch (error) {
-      console.error("Error logging out:", error)
-      toast.error("No se pudo cerrar sesión. Intenta de nuevo.")
+    } catch {
+      toast.error("No se pudo cerrar sesión.")
       setLoggingOut(false)
     }
   }
 
-  const isActive = (href: string) => {
-    if (href === "/admin") {
-      return pathname === "/admin"
-    }
-    return pathname.startsWith(href)
-  }
-
   return (
     <>
-      {/* Mobile Menu Button */}
+      {/* Mobile toggle */}
       <button
-        className="fixed top-4 left-4 z-40 md:hidden p-2 bg-burdeos text-crema rounded hover:bg-burdeos-dark transition-colors"
+        className="fixed top-4 left-4 z-40 md:hidden p-2.5 bg-carbon text-crema hover:bg-carbon-soft transition-colors"
         onClick={() => setOpen(!open)}
-        aria-label={open ? "Close menu" : "Open menu"}
+        aria-label={open ? "Cerrar menú" : "Abrir menú"}
       >
-        {open ? <X size={20} /> : <Menu size={20} />}
+        {open ? <X size={18} /> : <Menu size={18} />}
       </button>
 
       {/* Sidebar */}
       <aside
         className={`
-          fixed md:static top-0 left-0 z-30 h-screen w-64 bg-burdeos text-crema
-          transform transition-transform duration-300 md:transform-none
+          fixed md:static top-0 left-0 z-30 h-screen w-56 bg-carbon text-crema flex flex-col
+          transform transition-transform duration-300 ease-in-out md:transform-none
           ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
-        {/* Brand Header */}
-        <div className="p-6 border-b border-burdeos-light">
-          <h1 className="text-xl font-bold text-dorado">Casa Goyo</h1>
-          <p className="text-sm text-crema/70 mt-1">Administración</p>
+        {/* Brand */}
+        <div className="px-6 py-7 border-b border-crema/8">
+          <p
+            className="text-2xl font-light italic text-crema"
+            style={{ fontFamily: "var(--font-cormorant), Georgia, serif" }}
+          >
+            Casa Goyo
+          </p>
+          <p
+            className="text-[9px] tracking-[0.25em] uppercase text-dorado/60 mt-0.5"
+            style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+          >
+            Administración
+          </p>
         </div>
 
-        {/* Navigation Links */}
-        <nav className="flex-1 overflow-y-auto">
-          <ul className="p-4 space-y-2">
-            {ADMIN_LINKS.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className={`
-                    block px-4 py-3 rounded transition-colors
-                    ${
-                      isActive(link.href)
-                        ? "bg-dorado text-burdeos font-medium"
-                        : "text-crema hover:bg-burdeos-light"
-                    }
-                  `}
-                  onClick={() => setOpen(false)}
-                >
-                  <span className="mr-2">{link.icon}</span>
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        {/* Nav */}
+        <nav
+          className="flex-1 overflow-y-auto py-4"
+          style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+        >
+          {ADMIN_LINKS.map(({ href, label, icon: Icon, exact }) => {
+            const active = isActive(href, exact)
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                className={`flex items-center gap-3 px-6 py-3.5 text-[11px] tracking-[0.12em] uppercase transition-colors duration-150 ${
+                  active
+                    ? "text-dorado bg-crema/5 border-l-2 border-dorado"
+                    : "text-crema/50 hover:text-crema hover:bg-crema/5 border-l-2 border-transparent"
+                }`}
+              >
+                <Icon size={14} className="shrink-0" />
+                {label}
+              </Link>
+            )
+          })}
         </nav>
 
-        {/* Logout Button */}
-        <div className="p-4 border-t border-burdeos-light">
+        {/* Logout */}
+        <div className="px-6 py-5 border-t border-crema/8">
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-burdeos-dark text-crema rounded hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            className="w-full flex items-center gap-3 text-[11px] tracking-[0.12em] uppercase text-crema/40 hover:text-crema transition-colors duration-150 disabled:opacity-30"
+            style={{ fontFamily: "var(--font-josefin), sans-serif" }}
           >
-            <LogOut size={18} />
-            {loggingOut ? "Cerrando..." : "Cerrar Sesión"}
+            <LogOut size={14} />
+            {loggingOut ? "···" : "Cerrar sesión"}
           </button>
         </div>
       </aside>
 
-      {/* Mobile Overlay */}
+      {/* Mobile overlay */}
       {open && (
         <div
-          className="fixed inset-0 bg-black/50 z-20 md:hidden"
+          className="fixed inset-0 bg-carbon/60 backdrop-blur-sm z-20 md:hidden"
           onClick={() => setOpen(false)}
         />
       )}

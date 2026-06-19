@@ -1,12 +1,20 @@
 import type { Metadata } from "next"
-import { Inter, Playfair_Display } from "next/font/google"
+import { Cormorant_Garamond, Josefin_Sans } from "next/font/google"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-playfair",
-  weight: ["400", "600", "700"],
+  variable: "--font-cormorant",
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  display: "swap",
+})
+
+const josefin = Josefin_Sans({
+  subsets: ["latin"],
+  variable: "--font-josefin",
+  weight: ["300", "400", "600", "700"],
+  display: "swap",
 })
 
 export default function RootLayout({
@@ -16,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${inter.variable} ${playfair.variable} antialiased bg-crema`}>
+      <body className={`${cormorant.variable} ${josefin.variable} antialiased`}>
         {children}
       </body>
     </html>

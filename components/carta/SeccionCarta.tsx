@@ -1,4 +1,5 @@
 "use client"
+
 import { motion } from "framer-motion"
 import { useLocale } from "next-intl"
 import CardPlato from "./CardPlato"
@@ -6,8 +7,8 @@ import type { Plato, Seccion } from "@/lib/supabase/types"
 
 type Props = {
   seccion: Seccion
-  platos: Plato[]
-  hijos?: { seccion: Seccion; platos: Plato[] }[]
+  platos:  Plato[]
+  hijos?:  { seccion: Seccion; platos: Plato[] }[]
 }
 
 export default function SeccionCarta({ seccion, platos, hijos }: Props) {
@@ -15,36 +16,56 @@ export default function SeccionCarta({ seccion, platos, hijos }: Props) {
   const nombre = locale === "es" ? seccion.nombre_es : seccion.nombre_en
 
   return (
-    <section id={seccion.slug} className="scroll-mt-20 mb-14">
+    <section id={seccion.slug} className="scroll-mt-24 mb-16">
+
+      {/* Section heading */}
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, y: 14 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="mb-6"
+        transition={{ duration: 0.55 }}
+        className="mb-8 text-center"
       >
-        <h2 className="font-serif text-2xl text-burdeos">{nombre}</h2>
-        <div className="w-16 h-0.5 bg-dorado mt-1" />
+        <h2
+          className="text-4xl md:text-5xl font-light italic text-burdeos mb-4"
+          style={{ fontFamily: "var(--font-cormorant), Georgia, serif" }}
+        >
+          {nombre}
+        </h2>
+        <div className="divider-ornamental max-w-xs mx-auto">◆</div>
       </motion.div>
 
+      {/* Root-level dishes */}
       {platos.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-          {platos.map((plato) => (
-            <CardPlato key={plato.id} plato={plato} />
+        <div className="mb-10">
+          {platos.map((plato, i) => (
+            <CardPlato key={plato.id} plato={plato} index={i} />
           ))}
         </div>
       )}
 
+      {/* Subsections */}
       {hijos?.map(({ seccion: hijo, platos: platosHijo }) => (
-        <div key={hijo.id} className="mb-6">
-          <h3 className="font-serif text-lg text-carbon/70 mb-4 pl-2 border-l-2 border-dorado">
-            {locale === "es" ? hijo.nombre_es : hijo.nombre_en}
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {platosHijo.map((plato) => (
-              <CardPlato key={plato.id} plato={plato} />
-            ))}
-          </div>
+        <div key={hijo.id} className="mb-10">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4 }}
+            className="mb-5"
+          >
+            <h3
+              className="text-xl font-light italic text-carbon/60 mb-2"
+              style={{ fontFamily: "var(--font-cormorant), Georgia, serif" }}
+            >
+              {locale === "es" ? hijo.nombre_es : hijo.nombre_en}
+            </h3>
+            <div className="h-px bg-dorado/25 w-24" />
+          </motion.div>
+
+          {platosHijo.map((plato, i) => (
+            <CardPlato key={plato.id} plato={plato} index={i} />
+          ))}
         </div>
       ))}
     </section>

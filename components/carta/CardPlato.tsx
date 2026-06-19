@@ -1,67 +1,81 @@
 "use client"
+
 import { motion } from "framer-motion"
 import { useLocale, useTranslations } from "next-intl"
-import { Leaf, WheatOff } from "lucide-react"
-import ImagenPlato from "@/components/shared/ImagenPlato"
-import { formatPrecio, ALERGENOS_LABELS } from "@/lib/utils"
+import { ALERGENOS_LABELS, formatPrecio } from "@/lib/utils"
 import type { Plato } from "@/lib/supabase/types"
 
-type Props = { plato: Plato }
+type Props = { plato: Plato; index?: number }
 
-export default function CardPlato({ plato }: Props) {
+export default function CardPlato({ plato, index = 0 }: Props) {
   const locale = useLocale() as "es" | "en"
-  const t = useTranslations("carta")
+  const t      = useTranslations("carta")
 
-  const nombre = locale === "es" ? plato.nombre_es : plato.nombre_en
+  const nombre     = locale === "es" ? plato.nombre_es : plato.nombre_en
   const descripcion = locale === "es" ? plato.descripcion_es : plato.descripcion_en
 
   return (
-    <motion.div
-      className="bg-white rounded-xl overflow-hidden shadow-sm border border-dorado/10 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
-      initial={{ opacity: 0, y: 16 }}
+    <motion.article
+      initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.45, delay: index * 0.06 }}
+      className="group border-b border-burdeos/8 py-5 last:border-b-0 hover:bg-dorado/[0.03] transition-colors duration-300 px-1"
     >
-      <div className="relative h-44 w-full">
-        <ImagenPlato src={plato.foto_url} alt={nombre} />
+      <div className="flex items-baseline justify-between gap-4 mb-1">
+        <h3
+          className="text-[1.15rem] font-light text-carbon leading-snug group-hover:text-burdeos transition-colors duration-200"
+          style={{ fontFamily: "var(--font-cormorant), Georgia, serif" }}
+        >
+          {nombre}
+        </h3>
+
+        <span
+          className="shrink-0 text-[0.85rem] font-light tracking-wide text-dorado tabular-nums"
+          style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+        >
+          {formatPrecio(plato.precio)}
+        </span>
       </div>
 
-      <div className="p-4">
-        <div className="flex justify-between items-start gap-2 mb-1">
-          <h3 className="font-serif text-base font-semibold text-carbon leading-tight">
-            {nombre}
-          </h3>
-          <span className="text-burdeos font-bold text-sm whitespace-nowrap">
-            {formatPrecio(plato.precio)}
-          </span>
-        </div>
+      {descripcion && (
+        <p
+          className="text-[0.75rem] text-muted-warm leading-relaxed tracking-wide mb-2"
+          style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+        >
+          {descripcion}
+        </p>
+      )}
 
-        {descripcion && (
-          <p className="text-xs text-carbon/60 leading-relaxed mb-3">{descripcion}</p>
-        )}
-
-        <div className="flex flex-wrap gap-1.5">
+      {(plato.es_vegano || plato.sin_gluten || plato.alergenos.length > 0) && (
+        <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
           {plato.es_vegano && (
-            <span className="flex items-center gap-1 bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">
-              <Leaf size={10} /> {t("vegano")}
+            <span
+              className="text-[0.65rem] tracking-[0.15em] uppercase text-green-700"
+              style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+            >
+              · {t("vegano")}
             </span>
           )}
           {plato.sin_gluten && (
-            <span className="flex items-center gap-1 bg-amber-50 text-amber-700 text-xs px-2 py-0.5 rounded-full font-medium">
-              <WheatOff size={10} /> {t("sin_gluten")}
+            <span
+              className="text-[0.65rem] tracking-[0.15em] uppercase text-amber-700"
+              style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+            >
+              · {t("sin_gluten")}
             </span>
           )}
           {plato.alergenos.map((a) => (
             <span
               key={a}
-              className="bg-crema text-carbon/50 text-xs px-2 py-0.5 rounded-full"
+              className="text-[0.65rem] tracking-[0.12em] uppercase text-muted-warm/70"
+              style={{ fontFamily: "var(--font-josefin), sans-serif" }}
             >
               {ALERGENOS_LABELS[a]?.[locale] ?? a}
             </span>
           ))}
         </div>
-      </div>
-    </motion.div>
+      )}
+    </motion.article>
   )
 }

@@ -1,85 +1,112 @@
 import { createClient } from "@/lib/supabase/server"
-import { getTranslations } from "next-intl/server"
-import { getLocale } from "next-intl/server"
-import { MapPin, Phone, Clock } from "lucide-react"
+import { getTranslations, getLocale } from "next-intl/server"
+import { Phone, MapPin, Clock } from "lucide-react"
 
 export default async function InfoPage() {
-  const t = await getTranslations("info")
-  const locale = await getLocale()
+  const t       = await getTranslations("info")
+  const locale  = await getLocale()
   const supabase = await createClient()
 
-  const { data: info } = await supabase
-    .from("info_restaurante")
-    .select("*")
-    .single()
-
+  const { data: info } = await supabase.from("info_restaurante").select("*").single()
   const horario = locale === "es" ? info?.horario_es : info?.horario_en
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-10">
-      <h1 className="font-serif text-4xl text-burdeos text-center mb-2">
-        {t("titulo")}
-      </h1>
-      <div className="flex justify-center mb-10">
-        <div className="w-24 h-0.5 bg-dorado" />
+    <div className="max-w-2xl mx-auto px-6 py-16">
+
+      {/* Heading */}
+      <div className="text-center mb-14">
+        <h1
+          className="text-5xl font-light italic text-burdeos mb-5"
+          style={{ fontFamily: "var(--font-cormorant), Georgia, serif" }}
+        >
+          {t("titulo")}
+        </h1>
+        <div className="divider-ornamental max-w-xs mx-auto">◆</div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-0">
+
         {info?.telefono && (
-          <div className="flex gap-4 items-start bg-white rounded-xl p-5 shadow-sm border border-dorado/10">
-            <Phone className="text-burdeos mt-0.5" size={20} />
-            <div>
-              <p className="font-medium text-sm uppercase tracking-wide text-carbon/50 mb-1">
-                {t("telefono")}
-              </p>
-              <a
-                href={`tel:${info.telefono}`}
-                className="text-lg font-serif text-carbon hover:text-burdeos"
-              >
-                {info.telefono}
-              </a>
-            </div>
-          </div>
+          <InfoRow icon={<Phone size={15} className="text-dorado mt-0.5 shrink-0" />} label={t("telefono")}>
+            <a
+              href={`tel:${info.telefono}`}
+              className="link-elegante text-carbon hover:text-burdeos"
+              style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "1.2rem" }}
+            >
+              {info.telefono}
+            </a>
+          </InfoRow>
+        )}
+
+        {info?.email && (
+          <InfoRow icon={<span className="text-dorado text-sm mt-0.5 shrink-0">@</span>} label={t("email") ?? "Email"}>
+            <a
+              href={`mailto:${info.email}`}
+              className="link-elegante text-carbon hover:text-burdeos"
+              style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "1.1rem" }}
+            >
+              {info.email}
+            </a>
+          </InfoRow>
         )}
 
         {info?.direccion && (
-          <div className="flex gap-4 items-start bg-white rounded-xl p-5 shadow-sm border border-dorado/10">
-            <MapPin className="text-burdeos mt-0.5" size={20} />
-            <div>
-              <p className="font-medium text-sm uppercase tracking-wide text-carbon/50 mb-1">
-                {t("direccion")}
-              </p>
-              <p className="text-lg font-serif text-carbon">{info.direccion}</p>
-            </div>
-          </div>
+          <InfoRow icon={<MapPin size={15} className="text-dorado mt-0.5 shrink-0" />} label={t("direccion")}>
+            <p
+              className="text-carbon"
+              style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "1.2rem" }}
+            >
+              {info.direccion}
+            </p>
+          </InfoRow>
         )}
 
         {horario && (
-          <div className="flex gap-4 items-start bg-white rounded-xl p-5 shadow-sm border border-dorado/10">
-            <Clock className="text-burdeos mt-0.5" size={20} />
-            <div>
-              <p className="font-medium text-sm uppercase tracking-wide text-carbon/50 mb-1">
-                {t("horario")}
-              </p>
-              <pre className="text-sm text-carbon whitespace-pre-wrap font-sans leading-relaxed">
-                {horario}
-              </pre>
-            </div>
-          </div>
+          <InfoRow icon={<Clock size={15} className="text-dorado mt-0.5 shrink-0" />} label={t("horario")}>
+            <pre
+              className="whitespace-pre-wrap leading-relaxed text-carbon/80 text-sm"
+              style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+            >
+              {horario}
+            </pre>
+          </InfoRow>
         )}
+      </div>
 
-        {info?.direccion && (
-          <div className="rounded-xl overflow-hidden border border-dorado/10 h-56">
-            <iframe
-              src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                info.direccion
-              )}&output=embed`}
-              className="w-full h-full"
-              loading="lazy"
-              title="Restaurant location map"
-            />
-          </div>
-        )}
+      {info?.direccion && (
+        <div className="mt-12 border border-burdeos/10 overflow-hidden" style={{ height: 260 }}>
+          <iframe
+            src={`https://maps.google.com/maps?q=${encodeURIComponent(info.direccion)}&output=embed`}
+            className="w-full h-full grayscale opacity-80 hover:opacity-100 transition-opacity duration-300"
+            loading="lazy"
+            title="Localización del restaurante"
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function InfoRow({
+  icon,
+  label,
+  children,
+}: {
+  icon: React.ReactNode
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex gap-5 py-7 border-b border-burdeos/8 last:border-b-0">
+      <div className="w-5 flex justify-center pt-0.5">{icon}</div>
+      <div className="flex-1">
+        <p
+          className="text-[10px] tracking-[0.22em] uppercase text-muted-warm mb-2"
+          style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+        >
+          {label}
+        </p>
+        {children}
       </div>
     </div>
   )

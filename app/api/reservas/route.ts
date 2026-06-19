@@ -3,8 +3,6 @@ import { createClient } from "@/lib/supabase/server"
 import { ReservaSchema } from "@/lib/validations"
 import { Resend } from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 // Escape HTML entities to prevent XSS attacks
 function escapeHtml(text: string | undefined | null): string {
   if (!text) return ""
@@ -32,6 +30,7 @@ export async function POST(req: Request) {
       )
     }
 
+    const resend   = new Resend(process.env.RESEND_API_KEY)
     const supabase = await createClient()
     const { data, error } = await supabase
       .from("reservas")
