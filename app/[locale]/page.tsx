@@ -108,6 +108,17 @@ export default async function CartaPage({ params }: { params: Promise<{ locale: 
             Soliciten información a nuestro personal · Muchas gracias
           </p>
         </div>
+
+        {/* Pan notice */}
+        <div
+          className="mt-3 mx-auto max-w-sm flex items-center justify-center gap-2 bg-dorado/8 border border-dorado/25 rounded px-5 py-2.5"
+          style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+        >
+          <span className="text-dorado text-sm">◆</span>
+          <p className="text-[10px] tracking-[0.14em] uppercase text-carbon/65">
+            Servicio de pan · <span className="font-semibold text-carbon/80">1,30 €</span>
+          </p>
+        </div>
       </div>
 
       {/* Navigation */}
