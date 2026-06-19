@@ -22,10 +22,10 @@ import { formatPrecio, ALERGENOS_LABELS } from "@/lib/utils"
 interface ListaPlatosProps {
   platos: Plato[]
   secciones: Seccion[]
-  onPlatosChange?: () => void
+  onRefresh?: () => void
 }
 
-export default function ListaPlatos({ platos: initialPlatos, secciones, onPlatosChange }: ListaPlatosProps) {
+export default function ListaPlatos({ platos: initialPlatos, secciones, onRefresh }: ListaPlatosProps) {
   const [platos, setPlatos] = useState<Plato[]>(initialPlatos)
   const [editingPlato, setEditingPlato] = useState<Plato | null>(null)
   const [deletingPlatoId, setDeletingPlatoId] = useState<string | null>(null)
@@ -60,7 +60,7 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onPlatos
       // Update local state
       setPlatos((prev) => prev.filter((p) => p.id !== deletingPlatoId))
       toast.success("Plato eliminado correctamente")
-      onPlatosChange?.()
+      onRefresh?.()
     } catch (error) {
       console.error("Delete error:", error)
       toast.error(error instanceof Error ? error.message : "Error al eliminar el plato")
@@ -96,7 +96,7 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onPlatos
 
   const handleFormSuccess = async () => {
     handleCloseEditDialog()
-    onPlatosChange?.()
+    onRefresh?.()
 
     // Refresh platos list
     try {
@@ -249,7 +249,7 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onPlatos
             <FormPlato
               plato={editingPlato}
               secciones={secciones}
-              onSuccess={handleFormSuccess}
+              onSaved={handleFormSuccess}
               onCancel={handleCloseEditDialog}
             />
           )}

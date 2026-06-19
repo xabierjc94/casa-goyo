@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useForm, Controller } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,36 +10,28 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { Upload, X } from "lucide-react"
 import type { Plato, Seccion } from "@/lib/supabase/types"
 import { ALERGENOS_LABELS } from "@/lib/utils"
+import { PlatoSchema, type PlatoInput } from "@/lib/validations"
+import type { z } from "zod"
 
-interface FormPlatoData {
-  nombre_es: string
-  nombre_en: string
-  descripcion_es?: string
-  descripcion_en?: string
-  precio: string
-  seccion_slug: string
-  es_vegano?: boolean
-  sin_gluten?: boolean
-  activo?: boolean
-}
+// Raw form values — z.coerce.number() has unknown input type; use output for RHF defaults
+type PlatoFormValues = z.output<typeof PlatoSchema>
 
 interface FormPlatoProps {
   secciones: Seccion[]
   plato?: Plato
-  onSuccess?: () => void
+  onSaved?: () => void
   onCancel?: () => void
 }
 
 const ALERGENO_LIST = Object.keys(ALERGENOS_LABELS)
 
-export default function FormPlato({ secciones, plato, onSuccess, onCancel }: FormPlatoProps) {
+export default function FormPlato({ secciones, plato, onSaved, onCancel }: FormPlatoProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
+  const [uploading, setUploading] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(plato?.foto_url || null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [selectedAlergenos, setSelectedAlergenos] = useState<string[]>(plato?.alergenos || [])
@@ -48,9 +41,8 @@ export default function FormPlato({ secciones, plato, onSuccess, onCancel }: For
     handleSubmit,
     control,
     formState: { errors },
-    watch,
-    setValue,
-  } = useForm<FormPlatoData>({
+  } = useForm<PlatoFormValues>({
+    resolver: zodResolver(PlatoSchema) as never,
     mode: "onBlur",
     defaultValues: plato
       ? {
@@ -58,22 +50,20 @@ export default function FormPlato({ secciones, plato, onSuccess, onCancel }: For
           nombre_en: plato.nombre_en,
           descripcion_es: plato.descripcion_es || "",
           descripcion_en: plato.descripcion_en || "",
-          precio: plato.precio.toString(),
+          precio: plato.precio,
           seccion_slug: plato.seccion_slug,
           es_vegano: plato.es_vegano,
           sin_gluten: plato.sin_gluten,
           activo: plato.activo,
+          alergenos: plato.alergenos || [],
         }
       : {
           es_vegano: false,
           sin_gluten: false,
           activo: true,
-          precio: "",
+          alergenos: [],
         },
   })
-
-  const esVegano = watch("es_vegano")
-  const sinGluten = watch("sin_gluten")
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -112,27 +102,7 @@ export default function FormPlato({ secciones, plato, onSuccess, onCancel }: For
     setSelectedFile(null)
   }, [])
 
-  const onSubmit = async (data: FormPlatoData) => {
-    // Validate
-    if (!data.nombre_es.trim()) {
-      toast.error("Nombre ES requerido")
-      return
-    }
-    if (!data.nombre_en.trim()) {
-      toast.error("Name EN required")
-      return
-    }
-    if (!data.seccion_slug) {
-      toast.error("Sección requerida")
-      return
-    }
-
-    const precio = parseFloat(data.precio)
-    if (isNaN(precio) || precio < 0) {
-      toast.error("Precio inválido")
-      return
-    }
-
+  const onSubmit = async (data: PlatoInput) => {
     setIsSubmitting(true)
     try {
       const supabase = createClient()
@@ -141,12 +111,12 @@ export default function FormPlato({ secciones, plato, onSuccess, onCancel }: For
 
       // Handle image upload if a new file was selected
       if (selectedFile) {
-        setUploadProgress(0)
-
-        const fileName = `${Date.now()}_${selectedFile.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`
+        setUploading(true)
+        const ext = selectedFile.name.split(".").pop()
+        const path = `platos/${Date.now()}.${ext}`
         const { data: uploadData, error: uploadError } = await supabase.storage
-          .from("platos")
-          .upload(fileName, selectedFile, {
+          .from("imagenes")
+          .upload(path, selectedFile, {
             cacheControl: "3600",
             upsert: false,
           })
@@ -156,10 +126,9 @@ export default function FormPlato({ secciones, plato, onSuccess, onCancel }: For
         }
 
         // Get public URL
-        const { data: publicData } = supabase.storage.from("platos").getPublicUrl(uploadData.path)
+        const { data: publicData } = supabase.storage.from("imagenes").getPublicUrl(uploadData.path)
         fotoUrl = publicData.publicUrl
-
-        setUploadProgress(100)
+        setUploading(false)
       }
 
       // Prepare plato data
@@ -168,12 +137,12 @@ export default function FormPlato({ secciones, plato, onSuccess, onCancel }: For
         nombre_en: data.nombre_en.trim(),
         descripcion_es: data.descripcion_es?.trim() || null,
         descripcion_en: data.descripcion_en?.trim() || null,
-        precio: precio,
+        precio: data.precio,
         seccion_slug: data.seccion_slug,
         alergenos: selectedAlergenos,
-        es_vegano: data.es_vegano || false,
-        sin_gluten: data.sin_gluten || false,
-        activo: data.activo !== false,
+        es_vegano: data.es_vegano,
+        sin_gluten: data.sin_gluten,
+        activo: data.activo,
         foto_url: fotoUrl,
       }
 
@@ -191,18 +160,15 @@ export default function FormPlato({ secciones, plato, onSuccess, onCancel }: For
         toast.success("Plato creado correctamente")
       }
 
-      onSuccess?.()
+      onSaved?.()
     } catch (error) {
       console.error("Form submission error:", error)
       toast.error(error instanceof Error ? error.message : "Error al guardar el plato")
     } finally {
       setIsSubmitting(false)
-      setUploadProgress(0)
+      setUploading(false)
     }
   }
-
-  // Filter leaf sections (sections without children)
-  const leafSecciones = secciones.filter((s) => !s.padre_slug || s.padre_slug === null)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -218,7 +184,7 @@ export default function FormPlato({ secciones, plato, onSuccess, onCancel }: For
                 <SelectValue placeholder="Selecciona una sección" />
               </SelectTrigger>
               <SelectContent>
-                {leafSecciones.map((seccion) => (
+                {secciones.map((seccion) => (
                   <SelectItem key={seccion.slug} value={seccion.slug}>
                     {seccion.nombre_es}
                   </SelectItem>
@@ -301,9 +267,9 @@ export default function FormPlato({ secciones, plato, onSuccess, onCancel }: For
                   <X size={16} />
                 </button>
               </div>
-              {uploadProgress > 0 && uploadProgress < 100 && (
+              {uploading && (
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-dorado h-2 rounded-full transition-all" style={{ width: `${uploadProgress}%` }} />
+                  <div className="bg-dorado h-2 rounded-full animate-pulse w-full" />
                 </div>
               )}
               <label className="block">

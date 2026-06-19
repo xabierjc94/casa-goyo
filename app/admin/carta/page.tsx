@@ -57,7 +57,6 @@ export default function AdminCartaPage() {
     handleCloseForm()
     // Trigger data refresh
     setRefreshKey((prev) => prev + 1)
-    toast.success("Cambios guardados correctamente")
   }, [handleCloseForm])
 
   return (
@@ -107,7 +106,7 @@ export default function AdminCartaPage() {
             <ListaPlatos
               platos={platos}
               secciones={secciones}
-              onPlatosChange={() => setRefreshKey((prev) => prev + 1)}
+              onRefresh={() => setRefreshKey((prev) => prev + 1)}
             />
           </div>
         </>
@@ -121,7 +120,7 @@ export default function AdminCartaPage() {
           </DialogHeader>
           <FormPlato
             secciones={secciones}
-            onSuccess={handleFormSuccess}
+            onSaved={handleFormSuccess}
             onCancel={handleCloseForm}
           />
         </DialogContent>
