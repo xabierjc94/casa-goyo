@@ -52,15 +52,11 @@ export default function AdminGaleria() {
           <input type="file" accept="image/*" multiple className="hidden" onChange={handleUpload} disabled={uploading} />
         </label>
       </div>
-
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {fotos.map((foto) => (
           <div key={foto.id} className="relative group rounded-xl overflow-hidden aspect-square bg-gray-100">
             <img src={foto.foto_url} alt="" className="w-full h-full object-cover" />
-            <button
-              onClick={() => eliminar(foto)}
-              className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
-            >
+            <button onClick={() => eliminar(foto)} className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
               <Trash2 size={14} />
             </button>
           </div>

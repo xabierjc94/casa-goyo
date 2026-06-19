@@ -17,20 +17,16 @@ export default function AdminCartaPage() {
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
 
-  // Fetch data on mount using useCallback to prevent infinite loops
   const fetchData = useCallback(async () => {
     setIsLoading(true)
     try {
       const supabase = createClient()
-
       const [seccionesResult, platosResult] = await Promise.all([
         supabase.from("secciones").select("*").order("orden"),
         supabase.from("platos").select("*").order("orden"),
       ])
-
       if (seccionesResult.error) throw seccionesResult.error
       if (platosResult.error) throw platosResult.error
-
       setSecciones(seccionesResult.data || [])
       setPlatos(platosResult.data || [])
     } catch (error) {
@@ -41,48 +37,26 @@ export default function AdminCartaPage() {
     }
   }, [])
 
-  useEffect(() => {
-    fetchData()
-  }, [fetchData, refreshKey])
-
-  const handleOpenForm = useCallback(() => {
-    setIsFormDialogOpen(true)
-  }, [])
-
-  const handleCloseForm = useCallback(() => {
-    setIsFormDialogOpen(false)
-  }, [])
-
-  const handleFormSuccess = useCallback(() => {
-    handleCloseForm()
-    // Trigger data refresh
-    setRefreshKey((prev) => prev + 1)
-  }, [handleCloseForm])
+  useEffect(() => { fetchData() }, [fetchData, refreshKey])
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-4xl font-bold text-burdeos mb-2">Gestión de Carta</h1>
           <p className="text-carbon/60">Añade, edita o elimina platos del menú</p>
         </div>
-        <Button
-          onClick={handleOpenForm}
-          className="bg-burdeos hover:bg-burdeos-dark text-crema flex items-center gap-2 whitespace-nowrap"
-        >
+        <Button onClick={() => setIsFormDialogOpen(true)} className="bg-burdeos hover:bg-burdeos-dark text-crema flex items-center gap-2">
           <Plus size={20} /> Añadir Plato
         </Button>
       </div>
 
-      {/* Loading State */}
       {isLoading ? (
         <div className="text-center py-12">
           <p className="text-carbon/60">Cargando datos...</p>
         </div>
       ) : (
         <>
-          {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white rounded-lg shadow-md border border-dorado/20 p-4">
               <p className="text-carbon/60 text-sm">Total de Platos</p>
@@ -90,9 +64,7 @@ export default function AdminCartaPage() {
             </div>
             <div className="bg-white rounded-lg shadow-md border border-dorado/20 p-4">
               <p className="text-carbon/60 text-sm">Platos Activos</p>
-              <p className="text-3xl font-bold text-green-600">
-                {platos.filter((p) => p.activo).length}
-              </p>
+              <p className="text-3xl font-bold text-green-600">{platos.filter((p) => p.activo).length}</p>
             </div>
             <div className="bg-white rounded-lg shadow-md border border-dorado/20 p-4">
               <p className="text-carbon/60 text-sm">Secciones</p>
@@ -100,19 +72,13 @@ export default function AdminCartaPage() {
             </div>
           </div>
 
-          {/* Lista de Platos */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-bold text-burdeos mb-6">Platos del Menú</h2>
-            <ListaPlatos
-              platos={platos}
-              secciones={secciones}
-              onRefresh={() => setRefreshKey((prev) => prev + 1)}
-            />
+            <ListaPlatos platos={platos} secciones={secciones} onRefresh={() => setRefreshKey((prev) => prev + 1)} />
           </div>
         </>
       )}
 
-      {/* Add Plato Dialog */}
       <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -120,8 +86,8 @@ export default function AdminCartaPage() {
           </DialogHeader>
           <FormPlato
             secciones={secciones}
-            onSaved={handleFormSuccess}
-            onCancel={handleCloseForm}
+            onSaved={() => { setIsFormDialogOpen(false); setRefreshKey((prev) => prev + 1) }}
+            onCancel={() => setIsFormDialogOpen(false)}
           />
         </DialogContent>
       </Dialog>

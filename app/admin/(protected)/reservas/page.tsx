@@ -15,11 +15,7 @@ export default function AdminReservas() {
 
   const load = useCallback(async () => {
     const supabase = createClient()
-    const { data } = await supabase
-      .from("reservas")
-      .select("*")
-      .order("fecha", { ascending: true })
-      .order("hora")
+    const { data } = await supabase.from("reservas").select("*").order("fecha", { ascending: true }).order("hora")
     setReservas(data ?? [])
   }, [])
 
@@ -41,9 +37,7 @@ export default function AdminReservas() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <p className="font-semibold text-gray-800">{r.nombre}</p>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${estadoColors[r.estado]}`}>
-                    {r.estado}
-                  </span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${estadoColors[r.estado]}`}>{r.estado}</span>
                 </div>
                 <p className="text-sm text-gray-500">{r.fecha} · {r.hora} · {r.personas} personas</p>
                 <p className="text-sm text-gray-400">{r.email}{r.telefono ? ` · ${r.telefono}` : ""}</p>
@@ -51,14 +45,10 @@ export default function AdminReservas() {
               </div>
               <div className="flex gap-2 flex-shrink-0">
                 {r.estado !== "confirmada" && (
-                  <Button size="sm" className="bg-green-600 text-white h-8 text-xs" onClick={() => updateEstado(r.id, "confirmada")}>
-                    Confirmar
-                  </Button>
+                  <Button size="sm" className="bg-green-600 text-white h-8 text-xs" onClick={() => updateEstado(r.id, "confirmada")}>Confirmar</Button>
                 )}
                 {r.estado !== "cancelada" && (
-                  <Button size="sm" variant="outline" className="h-8 text-xs text-red-500 border-red-200" onClick={() => updateEstado(r.id, "cancelada")}>
-                    Cancelar
-                  </Button>
+                  <Button size="sm" variant="outline" className="h-8 text-xs text-red-500 border-red-200" onClick={() => updateEstado(r.id, "cancelada")}>Cancelar</Button>
                 )}
               </div>
             </div>

@@ -33,52 +33,27 @@ export default function AdminInfo() {
       <form onSubmit={handleSave} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 space-y-5 max-w-xl">
         <div>
           <Label>Dirección</Label>
-          <Input
-            value={info.direccion ?? ""}
-            onChange={(e) => setInfo({ ...info, direccion: e.target.value })}
-            className="mt-1"
-          />
+          <Input value={info.direccion ?? ""} onChange={(e) => setInfo({ ...info, direccion: e.target.value })} className="mt-1" />
         </div>
         <div>
           <Label>Teléfono</Label>
-          <Input
-            value={info.telefono ?? ""}
-            onChange={(e) => setInfo({ ...info, telefono: e.target.value })}
-            className="mt-1"
-          />
+          <Input value={info.telefono ?? ""} onChange={(e) => setInfo({ ...info, telefono: e.target.value })} className="mt-1" />
         </div>
         <div>
           <Label>Email de contacto</Label>
-          <Input
-            value={info.email ?? ""}
-            onChange={(e) => setInfo({ ...info, email: e.target.value })}
-            className="mt-1"
-          />
+          <Input value={info.email ?? ""} onChange={(e) => setInfo({ ...info, email: e.target.value })} className="mt-1" />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label>Horario (ES)</Label>
-            <Textarea
-              value={info.horario_es ?? ""}
-              onChange={(e) => setInfo({ ...info, horario_es: e.target.value })}
-              className="mt-1"
-              rows={5}
-              placeholder={"Lunes: cerrado\nMartes-Viernes: 13:00-16:00"}
-            />
+            <Textarea value={info.horario_es ?? ""} onChange={(e) => setInfo({ ...info, horario_es: e.target.value })} className="mt-1" rows={5} placeholder={"Lunes: cerrado\nMartes-Viernes: 13:00-16:00"} />
           </div>
           <div>
             <Label>Hours (EN)</Label>
-            <Textarea
-              value={info.horario_en ?? ""}
-              onChange={(e) => setInfo({ ...info, horario_en: e.target.value })}
-              className="mt-1"
-              rows={5}
-            />
+            <Textarea value={info.horario_en ?? ""} onChange={(e) => setInfo({ ...info, horario_en: e.target.value })} className="mt-1" rows={5} />
           </div>
         </div>
-        <Button type="submit" className="bg-burdeos text-crema">
-          {saved ? "¡Guardado!" : "Guardar cambios"}
-        </Button>
+        <Button type="submit" className="bg-burdeos text-crema">{saved ? "¡Guardado!" : "Guardar cambios"}</Button>
       </form>
     </div>
   )
