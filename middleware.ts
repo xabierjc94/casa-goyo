@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-const LOCALES    = ["es", "en"]
-const DEFAULT    = "es"
+const LOCALES = ["es", "en"]
+const DEFAULT = "es"
 
 function detectLocale(request: NextRequest): string {
   const accept = request.headers.get("accept-language") ?? ""
@@ -10,7 +10,7 @@ function detectLocale(request: NextRequest): string {
   return LOCALES.includes(preferred) ? preferred : DEFAULT
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const hasLocale = LOCALES.some(
