@@ -302,47 +302,94 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onRefres
     }
   }
 
+  // Group dishes by section, preserving section order
+  const platosBySeccion = new Map<string, Plato[]>()
+  for (const seccion of secciones) {
+    const items = platos.filter((p) => p.seccion_slug === seccion.slug)
+    if (items.length > 0) platosBySeccion.set(seccion.slug, items)
+  }
+  // Dishes whose section doesn't match any known section
+  const knownSlugs = new Set(secciones.map((s) => s.slug))
+  const huerfanos = platos.filter((p) => !knownSlugs.has(p.seccion_slug))
+
   return (
     <>
       {/* Order hint */}
-      <p className="text-xs text-carbon/40 mb-3 flex items-center gap-1.5">
+      <p className="text-xs text-carbon/40 mb-4 flex items-center gap-1.5">
         <GripVertical size={13} className="inline" />
         Arrastra el icono izquierdo para reordenar. El orden se guarda automáticamente.
         {isSavingOrder && <span className="text-dorado ml-1">Guardando…</span>}
       </p>
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={platos.map((p) => p.id)}
-          strategy={verticalListSortingStrategy}
+      {platos.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-carbon/60">No hay platos aún. Crea el primer plato para comenzar.</p>
+        </div>
+      ) : (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
         >
-          <div className="grid gap-3">
-            {platos.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-carbon/60">
-                  No hay platos aún. Crea el primer plato para comenzar.
-                </p>
-              </div>
-            ) : (
-              platos.map((plato) => (
-                <SortablePlatoItem
-                  key={plato.id}
-                  plato={plato}
-                  secciones={secciones}
-                  isTogglingId={isTogglingId}
-                  onEdit={handleEditPlato}
-                  onDelete={handleDeleteClick}
-                  onToggle={handleToggleActive}
-                />
-              ))
-            )}
-          </div>
-        </SortableContext>
-      </DndContext>
+          <SortableContext
+            items={platos.map((p) => p.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="space-y-8">
+              {Array.from(platosBySeccion.entries()).map(([slug, items]) => {
+                const seccion = secciones.find((s) => s.slug === slug)
+                return (
+                  <div key={slug}>
+                    <div className="flex items-center gap-3 mb-3">
+                      <h3 className="text-sm font-semibold tracking-widest uppercase text-burdeos">
+                        {seccion?.nombre_es ?? slug}
+                      </h3>
+                      <div className="flex-1 h-px bg-burdeos/15" />
+                      <span className="text-xs text-carbon/40">{items.length} plato{items.length !== 1 ? "s" : ""}</span>
+                    </div>
+                    <div className="grid gap-3">
+                      {items.map((plato) => (
+                        <SortablePlatoItem
+                          key={plato.id}
+                          plato={plato}
+                          secciones={secciones}
+                          isTogglingId={isTogglingId}
+                          onEdit={handleEditPlato}
+                          onDelete={handleDeleteClick}
+                          onToggle={handleToggleActive}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+              {huerfanos.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-3 mb-3">
+                    <h3 className="text-sm font-semibold tracking-widest uppercase text-carbon/40">
+                      Sin sección
+                    </h3>
+                    <div className="flex-1 h-px bg-carbon/10" />
+                  </div>
+                  <div className="grid gap-3">
+                    {huerfanos.map((plato) => (
+                      <SortablePlatoItem
+                        key={plato.id}
+                        plato={plato}
+                        secciones={secciones}
+                        isTogglingId={isTogglingId}
+                        onEdit={handleEditPlato}
+                        onDelete={handleDeleteClick}
+                        onToggle={handleToggleActive}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </SortableContext>
+        </DndContext>
+      )}
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
