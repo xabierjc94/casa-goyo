@@ -115,7 +115,15 @@ export default async function Footer() {
             className="text-crema/25 text-[10px] tracking-widest uppercase"
             style={{ fontFamily: "var(--font-josefin), sans-serif" }}
           >
-            © {year} Casa Goyo — {t("derechos")}
+            © {year} Casa Goyo — {t("derechos")} ·{" "}
+            <a
+              href="https://www.javierfullstack.es/#/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-dorado/60 transition-colors duration-200"
+            >
+              Desarrollado por javi.dev
+            </a>
           </p>
           <div
             className="text-[10px] tracking-[0.2em] text-dorado/50 uppercase"
