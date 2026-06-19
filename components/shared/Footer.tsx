@@ -1,5 +1,6 @@
 import { getTranslations, getLocale } from "next-intl/server"
 import Link from "next/link"
+import { Instagram } from "lucide-react"
 
 export default async function Footer() {
   const [t, locale] = await Promise.all([
@@ -37,6 +38,17 @@ export default async function Footer() {
             >
               Cocina tradicional castellana<br />en el corazón de la Alcarria
             </p>
+            <div className="mt-5 flex items-center gap-3">
+              <a
+                href="https://www.instagram.com/casa_goyo/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram de Casa Goyo"
+                className="text-crema/40 hover:text-dorado transition-colors duration-200"
+              >
+                <Instagram size={18} />
+              </a>
+            </div>
           </div>
 
           {/* Navigation */}
