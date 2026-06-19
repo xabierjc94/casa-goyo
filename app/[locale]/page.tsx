@@ -80,6 +80,25 @@ export default async function CartaPage() {
           {t("titulo")}
         </h1>
         <div className="divider-ornamental max-w-xs mx-auto">◆</div>
+
+        {/* Allergen notice — Reg. EU 1169/2011 */}
+        <div
+          className="mt-8 mx-auto max-w-sm border border-burdeos/15 rounded px-6 py-4 text-center space-y-1"
+          style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+        >
+          <p className="text-[9px] tracking-[0.18em] uppercase text-burdeos/60">
+            Reglamento (UE) N.º 1169/2011
+          </p>
+          <p className="text-[11px] tracking-[0.12em] uppercase text-carbon/70 font-medium leading-snug">
+            Establecimiento con información disponible
+          </p>
+          <p className="text-[11px] tracking-[0.12em] uppercase text-carbon/70 font-medium leading-snug">
+            en materia de alergias e intolerancias alimentarias
+          </p>
+          <p className="text-[10px] tracking-[0.1em] uppercase text-carbon/50 pt-1">
+            Soliciten información a nuestro personal · Muchas gracias
+          </p>
+        </div>
       </div>
 
       {/* Navigation */}
