@@ -21,13 +21,15 @@ export default function AdminGaleria() {
     if (!files.length) return
     setUploading(true)
     const supabase = createClient()
+    let orden = fotos.length
     for (const file of files) {
-      const ext = file.name.split(".").pop()
-      const path = `galeria/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-      const { error } = await supabase.storage.from("imagenes").upload(path, file)
-      if (!error) {
-        const { data: urlData } = supabase.storage.from("imagenes").getPublicUrl(path)
-        await supabase.from("galeria").insert({ foto_url: urlData.publicUrl, orden: fotos.length + 1 })
+      const body = new FormData()
+      body.append("file", file)
+      const res = await fetch("/api/upload", { method: "POST", body })
+      const json = await res.json()
+      if (res.ok && json.url) {
+        await supabase.from("galeria").insert({ foto_url: json.url, activo: true, orden: orden + 1 })
+        orden++
       }
     }
     setUploading(false)
