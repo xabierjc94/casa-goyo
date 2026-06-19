@@ -1,14 +1,16 @@
 import { z } from "zod"
 
 export const PlatoSchema = z.object({
+  seccion_slug: z.string().min(1, "Sección requerida"),
   nombre_es: z.string().min(1, "Nombre requerido"),
   nombre_en: z.string().min(1, "Name required"),
   descripcion_es: z.string().optional(),
   descripcion_en: z.string().optional(),
-  precio: z.coerce.number().min(0),
-  alergenos: z.array(z.string()).optional(),
-  es_vegano: z.boolean().optional(),
-  sin_gluten: z.boolean().optional(),
+  precio: z.coerce.number().min(0, "Precio inválido"),
+  alergenos: z.array(z.string()).default([]),
+  es_vegano: z.boolean().default(false),
+  sin_gluten: z.boolean().default(false),
+  activo: z.boolean().default(true),
 })
 
 export type PlatoInput = z.infer<typeof PlatoSchema>
