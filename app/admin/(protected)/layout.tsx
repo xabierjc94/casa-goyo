@@ -15,9 +15,9 @@ export default async function ProtectedAdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-crema flex">
+    <div className="h-screen overflow-hidden bg-crema flex">
       <AdminSidebar />
-      <main className="flex-1 overflow-auto p-6 md:p-8">{children}</main>
+      <main className="flex-1 overflow-y-auto p-6 md:p-8">{children}</main>
     </div>
   )
 }
