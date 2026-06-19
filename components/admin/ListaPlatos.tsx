@@ -30,7 +30,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Badge } from "@/components/ui/badge"
-import { Pencil, Trash2, ToggleLeft, ToggleRight, GripVertical, ChevronDown } from "lucide-react"
+import { Pencil, Trash2, ToggleLeft, ToggleRight, GripVertical, ChevronDown, Copy } from "lucide-react"
 import { toast } from "sonner"
 import FormPlato from "./FormPlato"
 import type { Plato, Seccion } from "@/lib/supabase/types"
@@ -42,18 +42,22 @@ interface SortablePlatoItemProps {
   plato: Plato
   secciones: Seccion[]
   isTogglingId: string | null
+  isDuplicatingId: string | null
   onEdit: (plato: Plato) => void
   onDelete: (id: string) => void
   onToggle: (id: string, currentActive: boolean) => void
+  onDuplicate: (plato: Plato) => void
 }
 
 function SortablePlatoItem({
   plato,
   secciones,
   isTogglingId,
+  isDuplicatingId,
   onEdit,
   onDelete,
   onToggle,
+  onDuplicate,
 }: SortablePlatoItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: plato.id })
@@ -173,6 +177,15 @@ function SortablePlatoItem({
             </Button>
             <Button
               size="sm"
+              variant="outline"
+              onClick={() => onDuplicate(plato)}
+              disabled={isDuplicatingId === plato.id}
+              className="flex items-center gap-1 h-7 text-xs"
+            >
+              <Copy size={14} /> {isDuplicatingId === plato.id ? "Duplicando…" : "Duplicar"}
+            </Button>
+            <Button
+              size="sm"
               variant="destructive"
               onClick={() => onDelete(plato.id)}
               className="flex items-center gap-1 h-7 text-xs"
@@ -201,6 +214,7 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onRefres
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isTogglingId, setIsTogglingId] = useState<string | null>(null)
+  const [isDuplicatingId, setIsDuplicatingId] = useState<string | null>(null)
   const [isSavingOrder, setIsSavingOrder] = useState(false)
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(() => {
     try {
@@ -307,6 +321,32 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onRefres
     }
   }
 
+  const handleDuplicatePlato = useCallback(async (plato: Plato) => {
+    setIsDuplicatingId(plato.id)
+    try {
+      const supabase = createClient()
+      const { data: last } = await supabase.from("platos").select("orden")
+        .order("orden", { ascending: false }).limit(1).maybeSingle()
+      const { id: _id, ...rest } = plato
+      const { error } = await supabase.from("platos").insert({
+        ...rest,
+        nombre_es: `${plato.nombre_es} (copia)`,
+        nombre_en: plato.nombre_en ? `${plato.nombre_en} (copy)` : null,
+        orden: (last?.orden ?? 0) + 1,
+        activo: false,
+      })
+      if (error) throw new Error(error.message)
+      toast.success("Plato duplicado correctamente")
+      onRefresh?.()
+      const { data } = await supabase.from("platos").select("*").order("orden")
+      if (data) setPlatos(data)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error al duplicar el plato")
+    } finally {
+      setIsDuplicatingId(null)
+    }
+  }, [onRefresh])
+
   const handleFormSuccess = async () => {
     handleCloseEditDialog()
     onRefresh?.()
@@ -382,9 +422,11 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onRefres
                             plato={plato}
                             secciones={secciones}
                             isTogglingId={isTogglingId}
+                            isDuplicatingId={isDuplicatingId}
                             onEdit={handleEditPlato}
                             onDelete={handleDeleteClick}
                             onToggle={handleToggleActive}
+                            onDuplicate={handleDuplicatePlato}
                           />
                         ))}
                       </div>
@@ -416,9 +458,11 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onRefres
                           plato={plato}
                           secciones={secciones}
                           isTogglingId={isTogglingId}
+                          isDuplicatingId={isDuplicatingId}
                           onEdit={handleEditPlato}
                           onDelete={handleDeleteClick}
                           onToggle={handleToggleActive}
+                          onDuplicate={handleDuplicatePlato}
                         />
                       ))}
                     </div>
