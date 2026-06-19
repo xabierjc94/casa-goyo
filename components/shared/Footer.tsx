@@ -112,7 +112,7 @@ export default async function Footer() {
         {/* Bottom rule */}
         <div className="mt-12 pt-6 border-t border-crema/8 flex flex-col items-center gap-3">
           <p
-            className="text-crema/25 text-[10px] tracking-widest uppercase"
+            className="text-crema/25 text-[10px] tracking-widest uppercase text-center"
             style={{ fontFamily: "var(--font-josefin), sans-serif" }}
           >
             © {year} Casa Goyo — {t("derechos")} ·{" "}
