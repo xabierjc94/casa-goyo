@@ -43,13 +43,18 @@ export default async function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram de Casa Goyo"
-                className="text-crema/40 hover:text-dorado transition-colors duration-200"
+                className="group flex items-center gap-2.5 text-crema/60 hover:text-crema transition-colors duration-200"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                  <circle cx="12" cy="12" r="4"/>
-                  <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
-                </svg>
+                <span className="flex items-center justify-center w-9 h-9 rounded-full border border-crema/20 group-hover:border-dorado group-hover:bg-dorado/10 transition-all duration-200">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <circle cx="12" cy="12" r="4"/>
+                    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+                  </svg>
+                </span>
+                <span className="text-[11px] tracking-[0.15em] uppercase" style={{ fontFamily: "var(--font-josefin), sans-serif" }}>
+                  @casa_goyo
+                </span>
               </a>
             </div>
           </div>
