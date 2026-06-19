@@ -7,10 +7,9 @@ import { useState, useCallback } from "react"
 import { Menu, X } from "lucide-react"
 
 const NAVBAR_LINKS = [
-  { href: (locale: string) => `/${locale}`,          label: "carta" },
-  { href: (locale: string) => `/${locale}/reservas`, label: "reservas" },
-  { href: (locale: string) => `/${locale}/info`,     label: "info" },
-  { href: (locale: string) => `/${locale}/galeria`,  label: "galeria" },
+  { href: (locale: string) => `/${locale}`,         label: "carta" },
+  { href: (locale: string) => `/${locale}/info`,    label: "info" },
+  { href: (locale: string) => `/${locale}/galeria`, label: "galeria" },
 ]
 
 export default function Navbar() {
