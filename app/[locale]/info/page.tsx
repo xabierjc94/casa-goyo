@@ -1,12 +1,18 @@
 import { createClient } from "@/lib/supabase/server"
-import { getTranslations, getLocale } from "next-intl/server"
-
-export const revalidate = 3600
+import { getTranslations, setRequestLocale } from "next-intl/server"
 import { Phone, MapPin, Clock } from "lucide-react"
 
-export default async function InfoPage() {
-  const t       = await getTranslations("info")
-  const locale  = await getLocale()
+export const revalidate = 3600
+
+export function generateStaticParams() {
+  return [{ locale: "es" }, { locale: "en" }]
+}
+
+export default async function InfoPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: rawLocale } = await params
+  const locale = rawLocale as "es" | "en"
+  setRequestLocale(locale)
+  const t = await getTranslations("info")
   const supabase = await createClient()
 
   const { data: info } = await supabase.from("info_restaurante").select("*").single()

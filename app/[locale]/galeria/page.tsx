@@ -1,14 +1,18 @@
 import { createClient } from "@/lib/supabase/server"
-import { getTranslations, getLocale } from "next-intl/server"
+import { getTranslations, setRequestLocale } from "next-intl/server"
 import GaleriaGrid from "@/components/galeria/GaleriaGrid"
 
 export const revalidate = 3600
 
-export default async function GaleriaPage() {
-  const [t, locale] = await Promise.all([
-    getTranslations("galeria"),
-    getLocale() as Promise<"es" | "en">,
-  ])
+export function generateStaticParams() {
+  return [{ locale: "es" }, { locale: "en" }]
+}
+
+export default async function GaleriaPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: rawLocale } = await params
+  const locale = rawLocale as "es" | "en"
+  setRequestLocale(locale)
+  const t = await getTranslations("galeria")
   const supabase = await createClient()
 
   const { data: fotos } = await supabase

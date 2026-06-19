@@ -1,16 +1,20 @@
 import { createClient } from "@/lib/supabase/server"
-import { getTranslations, getLocale } from "next-intl/server"
+import { getTranslations, setRequestLocale } from "next-intl/server"
 import SeccionCarta from "@/components/carta/SeccionCarta"
 import NavCarta from "@/components/carta/NavCarta"
 import type { Plato, Seccion } from "@/lib/supabase/types"
 
 export const revalidate = 3600 // re-fetch from Supabase at most once per hour
 
-export default async function CartaPage() {
-  const [t, locale] = await Promise.all([
-    getTranslations("carta"),
-    getLocale() as Promise<"es" | "en">,
-  ])
+export function generateStaticParams() {
+  return [{ locale: "es" }, { locale: "en" }]
+}
+
+export default async function CartaPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: rawLocale } = await params
+  const locale = rawLocale as "es" | "en"
+  setRequestLocale(locale)
+  const t = await getTranslations("carta")
   const supabase = await createClient()
 
   // Fetch all sections and dishes
