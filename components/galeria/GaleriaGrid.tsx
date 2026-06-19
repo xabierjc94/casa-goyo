@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
-import { X, ChevronLeft, ChevronRight, Expand } from "lucide-react"
+import { X, ChevronLeft, ChevronRight, Expand, Play } from "lucide-react"
+import { getMediaType, getEmbedUrl } from "@/lib/media"
 import type { Galeria } from "@/lib/supabase/types"
 
 type Props = { fotos: Galeria[]; locale: "es" | "en" }
@@ -59,22 +60,32 @@ export default function GaleriaGrid({ fotos, locale }: Props) {
               style={{ animationDelay: `${Math.min(i, 8) * 60}ms` }}
               onClick={() => open(i)}
             >
-              <Image
-                src={foto.foto_url}
-                alt={alt}
-                fill
-                sizes="(max-width: 768px) 50vw, 33vw"
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              />
-              {/* Overlay */}
+              {getMediaType(foto.foto_url) === "image" ? (
+                <Image
+                  src={foto.foto_url}
+                  alt={alt}
+                  fill
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+              ) : (
+                <div className="w-full h-full bg-carbon flex items-center justify-center">
+                  {foto.foto_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/) && (
+                    <div className="absolute inset-0 opacity-40"
+                      style={{ backgroundImage: `url(https://img.youtube.com/vi/${foto.foto_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/)?.[1]}/hqdefault.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
+                    />
+                  )}
+                  <div className="relative z-10 w-14 h-14 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
+                    <Play size={22} className="text-white ml-1" fill="white" />
+                  </div>
+                </div>
+              )}
               <div className="absolute inset-0 bg-carbon/0 group-hover:bg-carbon/35 transition-all duration-400" />
-              {/* Expand icon */}
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="p-2.5 border border-crema/60 text-crema/90">
-                  <Expand size={18} />
+                  {getMediaType(foto.foto_url) === "image" ? <Expand size={18} /> : <Play size={18} />}
                 </div>
               </div>
-              {/* Alt text if exists */}
               {alt && (
                 <p className="absolute bottom-0 left-0 right-0 px-4 py-3 text-crema text-[11px] tracking-widest uppercase translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gradient-to-t from-carbon/70 to-transparent"
                   style={{ fontFamily: "var(--font-josefin), sans-serif" }}>
@@ -111,25 +122,33 @@ export default function GaleriaGrid({ fotos, locale }: Props) {
             </button>
           )}
 
-          {/* Image */}
+          {/* Media */}
           <div
             className="relative"
             style={{
-              maxWidth: "min(90vw, 1100px)",
-              maxHeight: "88vh",
               transform: visible ? "scale(1)" : "scale(0.95)",
               transition: "transform 0.25s ease",
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <Image
-              src={fotos[index].foto_url}
-              alt={locale === "es" ? fotos[index].alt_es ?? "" : fotos[index].alt_en ?? ""}
-              width={1200}
-              height={900}
-              className="object-contain"
-              style={{ maxWidth: "min(90vw, 1100px)", maxHeight: "88vh", width: "auto", height: "auto" }}
-            />
+            {getMediaType(fotos[index].foto_url) === "image" ? (
+              <Image
+                src={fotos[index].foto_url}
+                alt={locale === "es" ? fotos[index].alt_es ?? "" : fotos[index].alt_en ?? ""}
+                width={1200}
+                height={900}
+                className="object-contain"
+                style={{ maxWidth: "min(90vw, 1100px)", maxHeight: "88vh", width: "auto", height: "auto" }}
+              />
+            ) : (
+              <iframe
+                src={getEmbedUrl(fotos[index].foto_url)}
+                title={locale === "es" ? fotos[index].alt_es ?? "Vídeo" : fotos[index].alt_en ?? "Video"}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ width: "min(90vw, 900px)", height: "min(50vw, 506px)", border: "none" }}
+              />
+            )}
           </div>
 
           {/* Next */}
