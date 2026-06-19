@@ -117,26 +117,18 @@ export default function FormPlato({ secciones, plato, onSaved, onCancel }: FormP
 
       let fotoUrl = plato?.foto_url || null
 
-      // Handle image upload if a new file was selected
+      // Handle image upload via server-side API route (uses service role key)
       if (selectedFile) {
         setUploading(true)
-        const ext = selectedFile.name.split(".").pop()
-        const path = `platos/${Date.now()}.${ext}`
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from("imagenes")
-          .upload(path, selectedFile, {
-            cacheControl: "3600",
-            upsert: false,
-          })
-
-        if (uploadError) {
-          throw new Error(`Error uploading image: ${uploadError.message}`)
-        }
-
-        // Get public URL
-        const { data: publicData } = supabase.storage.from("imagenes").getPublicUrl(uploadData.path)
-        fotoUrl = publicData.publicUrl
+        const body = new FormData()
+        body.append("file", selectedFile)
+        const res = await fetch("/api/upload", { method: "POST", body })
+        const json = await res.json()
         setUploading(false)
+        if (!res.ok) {
+          throw new Error(`Error uploading image: ${json.error ?? res.statusText}`)
+        }
+        fotoUrl = json.url
       }
 
       // Prepare plato data
