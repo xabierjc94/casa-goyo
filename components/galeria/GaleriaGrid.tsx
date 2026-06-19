@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import { X, ChevronLeft, ChevronRight, Expand, Play } from "lucide-react"
-import { getMediaType, getEmbedUrl } from "@/lib/media"
+import { getMediaType, getEmbedUrl, getYoutubeThumbnail, isVideoType } from "@/lib/media"
 import type { Galeria } from "@/lib/supabase/types"
 
 type Props = { fotos: Galeria[]; locale: "es" | "en" }
@@ -60,30 +60,35 @@ export default function GaleriaGrid({ fotos, locale }: Props) {
               style={{ animationDelay: `${Math.min(i, 8) * 60}ms` }}
               onClick={() => open(i)}
             >
-              {getMediaType(foto.foto_url) === "image" ? (
-                <Image
-                  src={foto.foto_url}
-                  alt={alt}
-                  fill
-                  sizes="(max-width: 768px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
-              ) : (
-                <div className="w-full h-full bg-carbon flex items-center justify-center">
-                  {foto.foto_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/) && (
-                    <div className="absolute inset-0 opacity-40"
-                      style={{ backgroundImage: `url(https://img.youtube.com/vi/${foto.foto_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/)?.[1]}/hqdefault.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
-                    />
-                  )}
-                  <div className="relative z-10 w-14 h-14 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
-                    <Play size={22} className="text-white ml-1" fill="white" />
+              {(() => {
+                const type = getMediaType(foto.foto_url)
+                if (type === "image") return (
+                  <Image
+                    src={foto.foto_url}
+                    alt={alt}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                )
+                const thumb = getYoutubeThumbnail(foto.foto_url)
+                return (
+                  <div className="w-full h-full bg-carbon flex items-center justify-center">
+                    {thumb && (
+                      <div className="absolute inset-0 opacity-50"
+                        style={{ backgroundImage: `url(${thumb})`, backgroundSize: "cover", backgroundPosition: "center" }}
+                      />
+                    )}
+                    <div className="relative z-10 w-14 h-14 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
+                      <Play size={22} className="text-white ml-1" fill="white" />
+                    </div>
                   </div>
-                </div>
-              )}
+                )
+              })()}
               <div className="absolute inset-0 bg-carbon/0 group-hover:bg-carbon/35 transition-all duration-400" />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="p-2.5 border border-crema/60 text-crema/90">
-                  {getMediaType(foto.foto_url) === "image" ? <Expand size={18} /> : <Play size={18} />}
+                  {isVideoType(getMediaType(foto.foto_url)) ? <Play size={18} /> : <Expand size={18} />}
                 </div>
               </div>
               {alt && (
@@ -131,7 +136,7 @@ export default function GaleriaGrid({ fotos, locale }: Props) {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {getMediaType(fotos[index].foto_url) === "image" ? (
+            {!isVideoType(getMediaType(fotos[index].foto_url)) ? (
               <Image
                 src={fotos[index].foto_url}
                 alt={locale === "es" ? fotos[index].alt_es ?? "" : fotos[index].alt_en ?? ""}
