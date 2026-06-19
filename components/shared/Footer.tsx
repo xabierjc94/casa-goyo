@@ -50,10 +50,9 @@ export default function Footer() {
             </p>
             <ul className="space-y-2.5">
               {[
-                { href: `/${locale}`,           label: "Carta" },
-                { href: `/${locale}/reservas`,  label: "Reservas" },
-                { href: `/${locale}/info`,       label: "Información" },
-                { href: `/${locale}/galeria`,    label: "Galería" },
+                { href: `/${locale}`,          label: "Carta" },
+                { href: `/${locale}/info`,      label: "Información" },
+                { href: `/${locale}/galeria`,   label: "Galería" },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link
