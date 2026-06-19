@@ -179,241 +179,182 @@ export default function FormPlato({ secciones, plato, onSaved, onCancel }: FormP
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* Section Selection */}
-      <div className="space-y-2">
-        <Label htmlFor="seccion_slug">Sección</Label>
-        <Controller
-          name="seccion_slug"
-          control={control}
-          render={({ field }) => (
-            <Select value={field.value || ""} onValueChange={field.onChange}>
-              <SelectTrigger id="seccion_slug">
-                <SelectValue placeholder="Selecciona una sección" />
-              </SelectTrigger>
-              <SelectContent>
-                {secciones.map((seccion) => (
-                  <SelectItem key={seccion.slug} value={seccion.slug}>
-                    {seccion.nombre_es}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        />
-        {errors.seccion_slug && <p className="text-sm text-red-500">{errors.seccion_slug.message}</p>}
-      </div>
+      {/* Two-column layout on large screens */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-      {/* Bilingual Names */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="nombre_es">Nombre ES</Label>
-          <Input id="nombre_es" {...register("nombre_es")} placeholder="Nombre en español" />
-          {errors.nombre_es && <p className="text-sm text-red-500">{errors.nombre_es.message}</p>}
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="nombre_en">Name EN</Label>
-          <Input id="nombre_en" {...register("nombre_en")} placeholder="Name in English" />
-          {errors.nombre_en && <p className="text-sm text-red-500">{errors.nombre_en.message}</p>}
-        </div>
-      </div>
-
-      {/* Bilingual Descriptions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="descripcion_es">Descripción ES</Label>
-          <Textarea
-            id="descripcion_es"
-            {...register("descripcion_es")}
-            placeholder="Descripción en español"
-            rows={3}
-          />
-          {errors.descripcion_es && <p className="text-sm text-red-500">{errors.descripcion_es.message}</p>}
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="descripcion_en">Description EN</Label>
-          <Textarea
-            id="descripcion_en"
-            {...register("descripcion_en")}
-            placeholder="Description in English"
-            rows={3}
-          />
-          {errors.descripcion_en && <p className="text-sm text-red-500">{errors.descripcion_en.message}</p>}
-        </div>
-      </div>
-
-      {/* Price */}
-      <div className="space-y-2">
-        <Label htmlFor="precio">Precio (EUR)</Label>
-        <Input
-          id="precio"
-          type="number"
-          step="0.01"
-          {...register("precio")}
-          placeholder="12.50"
-          min="0"
-        />
-      </div>
-
-      {/* Image Upload */}
-      <div className="space-y-2">
-        <Label>Foto</Label>
-        <div className="border-2 border-dashed border-dorado/30 rounded-lg p-6 text-center hover:border-dorado/60 transition-colors">
-          {imagePreview ? (
-            <div className="space-y-4">
-              <div className="relative w-full h-48">
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="w-full h-full object-cover rounded-lg"
-                />
-                <button
-                  type="button"
-                  onClick={removeImage}
-                  className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded hover:bg-red-600 transition-colors"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-              {uploading && (
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-dorado h-2 rounded-full animate-pulse w-full" />
-                </div>
+        {/* ── Left column: text fields ── */}
+        <div className="space-y-5">
+          {/* Section */}
+          <div className="space-y-2">
+            <Label htmlFor="seccion_slug">Sección</Label>
+            <Controller
+              name="seccion_slug"
+              control={control}
+              render={({ field }) => (
+                <Select value={field.value || ""} onValueChange={field.onChange}>
+                  <SelectTrigger id="seccion_slug">
+                    <SelectValue placeholder="Selecciona una sección" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {secciones.map((seccion) => (
+                      <SelectItem key={seccion.slug} value={seccion.slug}>
+                        {seccion.nombre_es}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
-              <label className="block">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-                <span className="text-sm text-dorado hover:underline cursor-pointer">Cambiar imagen</span>
-              </label>
-            </div>
-          ) : (
-            <label className="cursor-pointer space-y-2 block">
-              <Upload size={32} className="mx-auto text-dorado" />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-              <p className="text-sm font-medium text-carbon">Haz clic para subir imagen</p>
-              <p className="text-xs text-carbon/60">PNG, JPG o GIF (máximo 5MB)</p>
-            </label>
-          )}
-        </div>
-      </div>
-
-      {/* Allergens */}
-      <div className="space-y-3">
-        <div>
-          <Label className="text-base">Alérgenos</Label>
-          <p className="text-xs text-carbon/50 mt-0.5">14 alérgenos obligatorios (Reg. UE 1169/2011)</p>
-        </div>
-        <div className="grid grid-cols-2 gap-1.5">
-          {ALERGENO_LIST.map((alergeno) => {
-            const active = selectedAlergenos.includes(alergeno)
-            return (
-              <button
-                key={alergeno}
-                type="button"
-                onClick={() => handleAlergenaToggle(alergeno)}
-                className={`px-3 py-2 rounded border text-sm text-left transition-all ${
-                  active
-                    ? "border-burdeos bg-burdeos/8 text-burdeos font-semibold"
-                    : "border-burdeos/15 text-carbon/60 hover:border-burdeos/40 hover:text-carbon"
-                }`}
-              >
-                {active && <span className="mr-1">✓</span>}
-                {ALERGENOS_LABELS[alergeno]?.es || alergeno}
-              </button>
-            )
-          })}
-        </div>
-
-        {/* Custom allergens */}
-        <div className="flex gap-2">
-          <Input
-            value={customAlergeno}
-            onChange={(e) => setCustomAlergeno(e.target.value)}
-            placeholder="Otro alérgeno personalizado…"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") { e.preventDefault(); handleAddCustomAlergeno() }
-            }}
-          />
-          <Button type="button" variant="outline" onClick={handleAddCustomAlergeno} className="shrink-0">
-            Añadir
-          </Button>
-        </div>
-
-        {selectedAlergenos.filter((a) => !ALERGENO_LIST.includes(a)).length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {selectedAlergenos
-              .filter((a) => !ALERGENO_LIST.includes(a))
-              .map((a) => (
-                <span
-                  key={a}
-                  className="inline-flex items-center gap-1 px-2 py-1 bg-dorado/10 border border-dorado/30 rounded text-xs text-carbon"
-                >
-                  {a}
-                  <button
-                    type="button"
-                    onClick={() => setSelectedAlergenos((prev) => prev.filter((x) => x !== a))}
-                    className="hover:text-burdeos transition-colors"
-                  >
-                    <X size={11} />
-                  </button>
-                </span>
-              ))}
+            />
+            {errors.seccion_slug && <p className="text-sm text-red-500">{errors.seccion_slug.message}</p>}
           </div>
-        )}
+
+          {/* Names */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <Label htmlFor="nombre_es">Nombre ES</Label>
+              <Input id="nombre_es" {...register("nombre_es")} placeholder="Nombre en español" />
+              {errors.nombre_es && <p className="text-xs text-red-500">{errors.nombre_es.message}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="nombre_en">Name EN</Label>
+              <Input id="nombre_en" {...register("nombre_en")} placeholder="Name in English" />
+              {errors.nombre_en && <p className="text-xs text-red-500">{errors.nombre_en.message}</p>}
+            </div>
+          </div>
+
+          {/* Descriptions */}
+          <div className="space-y-2">
+            <Label htmlFor="descripcion_es">Descripción ES</Label>
+            <Textarea id="descripcion_es" {...register("descripcion_es")} placeholder="Descripción en español" rows={4} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="descripcion_en">Description EN</Label>
+            <Textarea id="descripcion_en" {...register("descripcion_en")} placeholder="Description in English" rows={4} />
+          </div>
+
+          {/* Price */}
+          <div className="space-y-2">
+            <Label htmlFor="precio">Precio (EUR)</Label>
+            <Input id="precio" type="number" step="0.01" min="0" {...register("precio")} placeholder="12.50" />
+          </div>
+
+          {/* Toggles */}
+          <div className="border border-burdeos/10 rounded-lg p-4 space-y-3">
+            <p className="text-xs tracking-widest uppercase text-carbon/40 mb-1">Opciones</p>
+            {[
+              { name: "es_vegano" as const, label: "Vegano" },
+              { name: "sin_gluten" as const, label: "Sin Gluten" },
+              { name: "activo"    as const, label: "Activo" },
+            ].map(({ name, label }) => (
+              <div key={name} className="flex items-center justify-between">
+                <Label htmlFor={name}>{label}</Label>
+                <Controller
+                  name={name}
+                  control={control}
+                  render={({ field }) => (
+                    <Switch id={name} checked={field.value} onCheckedChange={field.onChange} />
+                  )}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Right column: photo + allergens ── */}
+        <div className="space-y-5">
+          {/* Image Upload */}
+          <div className="space-y-2">
+            <Label>Foto</Label>
+            <div className="border-2 border-dashed border-dorado/30 rounded-lg p-4 text-center hover:border-dorado/60 transition-colors">
+              {imagePreview ? (
+                <div className="space-y-3">
+                  <div className="relative w-full h-56">
+                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded hover:bg-red-600 transition-colors"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                  {uploading && <div className="w-full bg-gray-200 rounded-full h-1.5"><div className="bg-dorado h-1.5 rounded-full animate-pulse w-full" /></div>}
+                  <label className="block cursor-pointer">
+                    <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                    <span className="text-sm text-dorado hover:underline">Cambiar imagen</span>
+                  </label>
+                </div>
+              ) : (
+                <label className="cursor-pointer block py-6 space-y-2">
+                  <Upload size={32} className="mx-auto text-dorado" />
+                  <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                  <p className="text-sm font-medium text-carbon">Haz clic para subir imagen</p>
+                  <p className="text-xs text-carbon/50">PNG, JPG o GIF · máx. 5 MB</p>
+                </label>
+              )}
+            </div>
+          </div>
+
+          {/* Allergens */}
+          <div className="space-y-3">
+            <div>
+              <Label className="text-base">Alérgenos</Label>
+              <p className="text-xs text-carbon/50 mt-0.5">14 alérgenos obligatorios (Reg. UE 1169/2011)</p>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
+              {ALERGENO_LIST.map((alergeno) => {
+                const active = selectedAlergenos.includes(alergeno)
+                return (
+                  <button
+                    key={alergeno}
+                    type="button"
+                    onClick={() => handleAlergenaToggle(alergeno)}
+                    className={`px-2 py-1.5 rounded border text-sm text-left transition-all ${
+                      active
+                        ? "border-burdeos bg-burdeos/8 text-burdeos font-semibold"
+                        : "border-burdeos/15 text-carbon/60 hover:border-burdeos/40 hover:text-carbon"
+                    }`}
+                  >
+                    {active && <span className="mr-1">✓</span>}
+                    {ALERGENOS_LABELS[alergeno]?.es || alergeno}
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Custom allergen */}
+            <div className="flex gap-2">
+              <Input
+                value={customAlergeno}
+                onChange={(e) => setCustomAlergeno(e.target.value)}
+                placeholder="Otro alérgeno…"
+                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleAddCustomAlergeno() } }}
+              />
+              <Button type="button" variant="outline" onClick={handleAddCustomAlergeno} className="shrink-0">
+                Añadir
+              </Button>
+            </div>
+
+            {selectedAlergenos.filter((a) => !ALERGENO_LIST.includes(a)).length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {selectedAlergenos.filter((a) => !ALERGENO_LIST.includes(a)).map((a) => (
+                  <span key={a} className="inline-flex items-center gap-1 px-2 py-1 bg-dorado/10 border border-dorado/30 rounded text-xs text-carbon">
+                    {a}
+                    <button type="button" onClick={() => setSelectedAlergenos((prev) => prev.filter((x) => x !== a))} className="hover:text-burdeos transition-colors">
+                      <X size={11} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Toggles */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="es_vegano">Vegano</Label>
-          <Controller
-            name="es_vegano"
-            control={control}
-            render={({ field }) => (
-              <Switch id="es_vegano" checked={field.value} onCheckedChange={field.onChange} />
-            )}
-          />
-        </div>
-
-        <div className="flex items-center justify-between">
-          <Label htmlFor="sin_gluten">Sin Gluten</Label>
-          <Controller
-            name="sin_gluten"
-            control={control}
-            render={({ field }) => (
-              <Switch id="sin_gluten" checked={field.value} onCheckedChange={field.onChange} />
-            )}
-          />
-        </div>
-
-        <div className="flex items-center justify-between">
-          <Label htmlFor="activo">Activo</Label>
-          <Controller
-            name="activo"
-            control={control}
-            render={({ field }) => (
-              <Switch id="activo" checked={field.value} onCheckedChange={field.onChange} />
-            )}
-          />
-        </div>
-      </div>
-
-      {/* Form Actions */}
-      <div className="flex gap-3 pt-4">
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="flex-1 bg-burdeos hover:bg-burdeos-dark text-crema"
-        >
-          {isSubmitting ? "Guardando..." : plato ? "Actualizar Plato" : "Crear Plato"}
+      {/* Actions — full width */}
+      <div className="flex gap-3 pt-2 border-t border-burdeos/10">
+        <Button type="submit" disabled={isSubmitting} className="flex-1 bg-burdeos hover:bg-burdeos-dark text-crema">
+          {isSubmitting ? "Guardando…" : plato ? "Actualizar Plato" : "Crear Plato"}
         </Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel} className="flex-1">
