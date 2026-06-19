@@ -35,6 +35,7 @@ export default function FormPlato({ secciones, plato, onSaved, onCancel }: FormP
   const [imagePreview, setImagePreview] = useState<string | null>(plato?.foto_url || null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [selectedAlergenos, setSelectedAlergenos] = useState<string[]>(plato?.alergenos || [])
+  const [customAlergeno, setCustomAlergeno] = useState("")
 
   const {
     register,
@@ -96,6 +97,13 @@ export default function FormPlato({ secciones, plato, onSaved, onCancel }: FormP
       return prev.includes(alergeno) ? prev.filter((a) => a !== alergeno) : [...prev, alergeno]
     })
   }, [])
+
+  const handleAddCustomAlergeno = useCallback(() => {
+    const trimmed = customAlergeno.trim()
+    if (!trimmed || selectedAlergenos.includes(trimmed)) return
+    setSelectedAlergenos((prev) => [...prev, trimmed])
+    setCustomAlergeno("")
+  }, [customAlergeno, selectedAlergenos])
 
   const removeImage = useCallback(() => {
     setImagePreview(null)
@@ -299,24 +307,68 @@ export default function FormPlato({ secciones, plato, onSaved, onCancel }: FormP
       </div>
 
       {/* Allergens */}
-      <div className="space-y-2">
-        <Label>Alérgenos</Label>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-          {ALERGENO_LIST.map((alergeno) => (
-            <button
-              key={alergeno}
-              type="button"
-              onClick={() => handleAlergenaToggle(alergeno)}
-              className={`p-2 rounded-lg border-2 transition-all text-sm font-medium ${
-                selectedAlergenos.includes(alergeno)
-                  ? "border-burdeos bg-burdeos text-crema"
-                  : "border-crema bg-white text-carbon hover:border-dorado"
-              }`}
-            >
-              {ALERGENOS_LABELS[alergeno]?.es || alergeno}
-            </button>
-          ))}
+      <div className="space-y-3">
+        <div>
+          <Label className="text-base">Alérgenos</Label>
+          <p className="text-xs text-carbon/50 mt-0.5">14 alérgenos obligatorios (Reg. UE 1169/2011)</p>
         </div>
+        <div className="grid grid-cols-2 gap-1.5">
+          {ALERGENO_LIST.map((alergeno) => {
+            const active = selectedAlergenos.includes(alergeno)
+            return (
+              <button
+                key={alergeno}
+                type="button"
+                onClick={() => handleAlergenaToggle(alergeno)}
+                className={`px-3 py-2 rounded border text-sm text-left transition-all ${
+                  active
+                    ? "border-burdeos bg-burdeos/8 text-burdeos font-semibold"
+                    : "border-burdeos/15 text-carbon/60 hover:border-burdeos/40 hover:text-carbon"
+                }`}
+              >
+                {active && <span className="mr-1">✓</span>}
+                {ALERGENOS_LABELS[alergeno]?.es || alergeno}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Custom allergens */}
+        <div className="flex gap-2">
+          <Input
+            value={customAlergeno}
+            onChange={(e) => setCustomAlergeno(e.target.value)}
+            placeholder="Otro alérgeno personalizado…"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") { e.preventDefault(); handleAddCustomAlergeno() }
+            }}
+          />
+          <Button type="button" variant="outline" onClick={handleAddCustomAlergeno} className="shrink-0">
+            Añadir
+          </Button>
+        </div>
+
+        {selectedAlergenos.filter((a) => !ALERGENO_LIST.includes(a)).length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {selectedAlergenos
+              .filter((a) => !ALERGENO_LIST.includes(a))
+              .map((a) => (
+                <span
+                  key={a}
+                  className="inline-flex items-center gap-1 px-2 py-1 bg-dorado/10 border border-dorado/30 rounded text-xs text-carbon"
+                >
+                  {a}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedAlergenos((prev) => prev.filter((x) => x !== a))}
+                    className="hover:text-burdeos transition-colors"
+                  >
+                    <X size={11} />
+                  </button>
+                </span>
+              ))}
+          </div>
+        )}
       </div>
 
       {/* Toggles */}
