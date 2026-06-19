@@ -1,10 +1,11 @@
 import { NextIntlClientProvider } from "next-intl"
-import { getMessages } from "next-intl/server"
+import { getMessages, setRequestLocale } from "next-intl/server"
 import Navbar from "@/components/shared/Navbar"
 import Footer from "@/components/shared/Footer"
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
+  setRequestLocale(locale)
   return {
     title: "Restaurante Casa Goyo — Alcocer, Guadalajara",
     description: locale === "es"
@@ -22,6 +23,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
+  setRequestLocale(locale)
   const messages = await getMessages()
 
   return (
