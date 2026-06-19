@@ -346,7 +346,7 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onRefres
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-4xl w-[95vw] max-h-[92vh] overflow-y-auto">
+        <DialogContent className="max-w-6xl w-[98vw] h-[95vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Editar Plato</DialogTitle>
           </DialogHeader>
