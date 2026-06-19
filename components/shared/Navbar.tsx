@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback } from "react"
 import { Menu, X } from "lucide-react"
 
 const NAVBAR_LINKS = [
@@ -18,14 +18,6 @@ export default function Navbar() {
   const pathname = usePathname()
   const router   = useRouter()
   const [open, setOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 24)
-    handler()
-    window.addEventListener("scroll", handler, { passive: true })
-    return () => window.removeEventListener("scroll", handler)
-  }, [])
 
   const links = NAVBAR_LINKS.map((link) => ({
     href:  link.href(locale),
@@ -40,8 +32,8 @@ export default function Navbar() {
   const isActive = (href: string) => pathname === href
 
   return (
-    <nav className={`sticky top-0 z-50 transition-all duration-500 ${scrolled ? "bg-crema/95 backdrop-blur-md border-b border-burdeos/10 shadow-[0_1px_24px_rgba(26,10,10,0.06)]" : "bg-transparent border-b border-transparent"}`}>
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-[72px]">
+    <nav className="sticky top-0 z-50 bg-crema/96 backdrop-blur-md border-b border-burdeos/10">
+      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-[68px]">
 
         {/* Logo */}
         <Link

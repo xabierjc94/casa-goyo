@@ -100,12 +100,6 @@
     font-family: var(--font-cormorant), Georgia, serif;
     letter-spacing: 0.01em;
   }
-
-  /* Elegant scrollbar */
-  ::-webkit-scrollbar { width: 3px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #B8870B40; border-radius: 2px; }
-  ::-webkit-scrollbar-thumb:hover { background: #B8870B80; }
 }
 
 /* ──────────────────────────────────────
@@ -116,11 +110,6 @@
   /* Hide scrollbar cross-browser */
   .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
-
-  /* Prefers-reduced-motion */
-  @media (prefers-reduced-motion: reduce) {
-    .animate-fade-up, .animate-fade-in { animation: none; opacity: 1; transform: none; }
-  }
 
   /* Typography */
   .font-display  { font-family: var(--font-cormorant), Georgia, serif; }

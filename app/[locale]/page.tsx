@@ -79,22 +79,16 @@ export default async function CartaPage({ params }: { params: Promise<{ locale: 
   })
 
   return (
-    <main className="max-w-3xl mx-auto px-4 pt-16 pb-20">
+    <main className="max-w-3xl mx-auto px-4 pt-14 pb-16">
       {/* Page Title */}
-      <div className="text-center mb-14">
-        <p
-          className="text-[9px] tracking-[0.45em] uppercase text-dorado/70 mb-4"
-          style={{ fontFamily: "var(--font-josefin), sans-serif" }}
-        >
-          Casa Goyo · Alcocer
-        </p>
+      <div className="text-center mb-12">
         <h1
-          className="text-6xl md:text-7xl font-light italic text-burdeos mb-6 leading-none"
+          className="text-5xl md:text-6xl font-light italic text-burdeos mb-5"
           style={{ fontFamily: "var(--font-cormorant), Georgia, serif" }}
         >
           {t("titulo")}
         </h1>
-        <div className="divider-ornamental max-w-[220px] mx-auto">◆</div>
+        <div className="divider-ornamental max-w-xs mx-auto">◆</div>
 
         {/* Allergen notice — Reg. EU 1169/2011 */}
         <div
@@ -153,7 +147,6 @@ export default async function CartaPage({ params }: { params: Promise<{ locale: 
             platos={platosDirectos}
             hijos={hijos.length > 0 ? hijos : undefined}
             locale={locale}
-            index={seccionesConContenido.indexOf(seccion)}
           />
         )
       })}
