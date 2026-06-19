@@ -15,18 +15,26 @@ export default function CardPlato({ plato, locale, index = 0 }: Props) {
 
   return (
     <article
-      className="animate-fade-up group border-b border-burdeos/8 py-5 last:border-b-0 hover:bg-dorado/[0.03] transition-colors duration-300 px-1"
+      className="animate-fade-up group relative py-5 border-b border-burdeos/8 last:border-b-0 transition-all duration-300 hover:pl-3"
       style={{ animationDelay: `${index * 55}ms` }}
     >
-      <div className="flex items-baseline justify-between gap-4 mb-1">
+      {/* Left accent on hover */}
+      <div className="absolute left-0 top-4 bottom-4 w-px bg-dorado scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center" />
+
+      {/* Name + dotted leader + price */}
+      <div className="flex items-baseline gap-2">
         <h3
-          className="text-[1.15rem] font-light text-carbon leading-snug group-hover:text-burdeos transition-colors duration-200"
+          className="shrink-0 text-[1.15rem] font-light text-carbon leading-snug group-hover:text-burdeos transition-colors duration-200"
           style={{ fontFamily: "var(--font-cormorant), Georgia, serif" }}
         >
           {nombre}
         </h3>
         <span
-          className="shrink-0 text-[0.85rem] font-light tracking-wide text-dorado tabular-nums"
+          className="flex-1 min-w-[1.5rem] border-b border-dotted border-carbon/18 mb-[5px]"
+          aria-hidden="true"
+        />
+        <span
+          className="shrink-0 text-[0.88rem] font-light tracking-wide text-dorado tabular-nums"
           style={{ fontFamily: "var(--font-josefin), sans-serif" }}
         >
           {formatPrecio(plato.precio)}
@@ -35,7 +43,7 @@ export default function CardPlato({ plato, locale, index = 0 }: Props) {
 
       {descripcion && (
         <p
-          className="text-[0.75rem] text-muted-warm leading-relaxed tracking-wide mb-2"
+          className="mt-1 text-[0.74rem] text-muted-warm leading-relaxed tracking-wide"
           style={{ fontFamily: "var(--font-josefin), sans-serif" }}
         >
           {descripcion}
