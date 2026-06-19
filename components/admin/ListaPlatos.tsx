@@ -202,13 +202,21 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onRefres
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isTogglingId, setIsTogglingId] = useState<string | null>(null)
   const [isSavingOrder, setIsSavingOrder] = useState(false)
-  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set())
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(() => {
+    try {
+      const stored = localStorage.getItem("admin:carta:collapsed")
+      return stored ? new Set(JSON.parse(stored) as string[]) : new Set()
+    } catch {
+      return new Set()
+    }
+  })
 
   const toggleSection = useCallback((slug: string) => {
     setCollapsedSections((prev) => {
       const next = new Set(prev)
       if (next.has(slug)) next.delete(slug)
       else next.add(slug)
+      try { localStorage.setItem("admin:carta:collapsed", JSON.stringify([...next])) } catch {}
       return next
     })
   }, [])
