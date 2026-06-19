@@ -110,7 +110,7 @@ export default async function Footer() {
         </div>
 
         {/* Bottom rule */}
-        <div className="mt-12 pt-6 border-t border-crema/8 flex flex-col md:flex-row justify-between items-center gap-3">
+        <div className="mt-12 pt-6 border-t border-crema/8 flex flex-col items-center gap-3">
           <p
             className="text-crema/25 text-[10px] tracking-widest uppercase"
             style={{ fontFamily: "var(--font-josefin), sans-serif" }}
