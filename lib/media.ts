@@ -15,9 +15,11 @@ export function getEmbedUrl(url: string): string {
   const vimeoMatch = url.match(/vimeo\.com\/(\d+)/)
   if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}`
 
-  // RTVE: extrae el ID numérico al final de la URL
-  const rtveMatch = url.match(/\/(\d+)\/?$/)
-  if (rtveMatch && /rtve\.es/.test(url)) return `https://www.rtve.es/m/embed/videos/${rtveMatch[1]}/`
+  // RTVE: preserva la ruta completa (slug + ID)
+  if (/rtve\.es/.test(url)) {
+    const rtvePathMatch = url.match(/rtve\.es(?:\/play)?\/videos\/(.+?)\/?$/)
+    if (rtvePathMatch) return `https://www.rtve.es/m/embed/videos/${rtvePathMatch[1]}/`
+  }
 
   return url
 }
