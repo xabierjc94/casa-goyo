@@ -80,7 +80,7 @@ export default function AdminCartaPage() {
       )}
 
       <Dialog open={isFormDialogOpen} onOpenChange={setIsFormDialogOpen}>
-        <DialogContent className="w-[98vw] sm:max-w-[98vw] h-[95vh] overflow-y-auto">
+        <DialogContent className="w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Crear Nuevo Plato</DialogTitle>
           </DialogHeader>
