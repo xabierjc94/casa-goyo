@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
 import { useState, useCallback } from "react"
 import { Menu, X } from "lucide-react"
+import ThemeToggle from "@/components/shared/ThemeToggle"
 
 const NAVBAR_LINKS = [
   { href: (locale: string) => `/${locale}`,         label: "carta" },
@@ -79,10 +80,13 @@ export default function Navbar() {
             </Link>
           ))}
 
+          {/* Theme toggle */}
+          <ThemeToggle />
+
           {/* Language toggle */}
           <button
             onClick={toggleLocale}
-            className="ml-2 text-[11px] tracking-[0.18em] uppercase text-muted-warm hover:text-burdeos transition-colors duration-200 border-l border-burdeos/15 pl-6"
+            className="text-[11px] tracking-[0.18em] uppercase text-muted-warm hover:text-burdeos transition-colors duration-200 border-l border-burdeos/15 pl-5"
             style={{ fontFamily: "var(--font-josefin), sans-serif" }}
             aria-label={locale === "es" ? "Switch to English" : "Cambiar a Español"}
           >

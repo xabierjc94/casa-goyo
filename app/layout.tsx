@@ -24,6 +24,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}` }} />
+      </head>
       <body className={`${cormorant.variable} ${josefin.variable} antialiased`}>
         {children}
       </body>

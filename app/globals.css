@@ -75,6 +75,35 @@
 }
 
 /* ──────────────────────────────────────
+   Dark mode tokens
+────────────────────────────────────── */
+.dark {
+  --background:              #0E0906;
+  --foreground:              #F0E2CE;
+  --card:                    #1A1108;
+  --card-foreground:         #F0E2CE;
+  --popover:                 #1A1108;
+  --popover-foreground:      #F0E2CE;
+  --primary:                 #C04060;
+  --primary-foreground:      #FAF0E6;
+  --secondary:               #2A1F14;
+  --secondary-foreground:    #D4C4B0;
+  --muted:                   #2A1F14;
+  --muted-foreground:        #8B7355;
+  --border:                  rgba(240, 226, 206, 0.10);
+  --input:                   rgba(240, 226, 206, 0.08);
+  --ring:                    rgba(184, 135, 11, 0.40);
+
+  --color-crema:             #1A1108;
+  --color-crema-dark:        #0E0906;
+  --color-carbon:            #F0E2CE;
+  --color-carbon-soft:       #D4C4B0;
+  --color-muted-warm:        #8B7355;
+  --color-burdeos:           #C04060;
+  --color-dorado:            #D4A224;
+}
+
+/* ──────────────────────────────────────
    Base styles
 ────────────────────────────────────── */
 @layer base {
@@ -88,12 +117,13 @@
   }
 
   body {
-    background-color: #FAF0E6;
-    color: #1A1A1A;
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: var(--font-josefin), 'Helvetica Neue', sans-serif;
     font-size: 15px;
     letter-spacing: 0.01em;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
