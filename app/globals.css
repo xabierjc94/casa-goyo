@@ -107,6 +107,10 @@
 ────────────────────────────────────── */
 @layer utilities {
 
+  /* Hide scrollbar cross-browser */
+  .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
   /* Typography */
   .font-display  { font-family: var(--font-cormorant), Georgia, serif; }
   .font-ui       { font-family: var(--font-josefin), 'Helvetica Neue', sans-serif; }
