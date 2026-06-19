@@ -81,6 +81,11 @@ export default function Footer() {
             >
               <p>Alcocer, Guadalajara</p>
               <p>Castilla-La Mancha, España</p>
+              <p>
+                <a href="tel:+34949355003" className="hover:text-crema/80 transition-colors">
+                  949 355 003
+                </a>
+              </p>
             </address>
           </div>
         </div>
