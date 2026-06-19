@@ -22,7 +22,7 @@ export default async function GaleriaPage({ params }: { params: Promise<{ locale
     .order("orden")
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-16">
+    <div className="max-w-7xl mx-auto px-4 py-16">
 
       {/* Heading */}
       <div className="text-center mb-14">
