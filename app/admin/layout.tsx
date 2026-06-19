@@ -7,17 +7,14 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Only check authentication for non-login routes
-  // The login page will handle its own auth state
+  // Check authentication
   const supabase = await createClient()
 
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Only redirect if we're not on the login page
-  // We check this by seeing if there's a user - if there's no user
-  // they should be on /admin/login, not here
+  // Redirect to login if not authenticated
   if (!user) {
     redirect("/admin/login")
   }
