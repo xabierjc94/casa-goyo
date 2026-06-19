@@ -30,7 +30,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Badge } from "@/components/ui/badge"
-import { Pencil, Trash2, ToggleLeft, ToggleRight, GripVertical } from "lucide-react"
+import { Pencil, Trash2, ToggleLeft, ToggleRight, GripVertical, ChevronDown } from "lucide-react"
 import { toast } from "sonner"
 import FormPlato from "./FormPlato"
 import type { Plato, Seccion } from "@/lib/supabase/types"
@@ -202,6 +202,16 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onRefres
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isTogglingId, setIsTogglingId] = useState<string | null>(null)
   const [isSavingOrder, setIsSavingOrder] = useState(false)
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set())
+
+  const toggleSection = useCallback((slug: string) => {
+    setCollapsedSections((prev) => {
+      const next = new Set(prev)
+      if (next.has(slug)) next.delete(slug)
+      else next.add(slug)
+      return next
+    })
+  }, [])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -338,17 +348,61 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onRefres
             <div className="space-y-8">
               {Array.from(platosBySeccion.entries()).map(([slug, items]) => {
                 const seccion = secciones.find((s) => s.slug === slug)
+                const collapsed = collapsedSections.has(slug)
                 return (
                   <div key={slug}>
-                    <div className="flex items-center gap-3 mb-3">
-                      <h3 className="text-sm font-semibold tracking-widest uppercase text-burdeos">
+                    <button
+                      type="button"
+                      onClick={() => toggleSection(slug)}
+                      className="w-full flex items-center gap-3 mb-3 group"
+                    >
+                      <ChevronDown
+                        size={15}
+                        className={`text-burdeos/60 transition-transform duration-200 ${collapsed ? "-rotate-90" : ""}`}
+                      />
+                      <h3 className="text-sm font-semibold tracking-widest uppercase text-burdeos group-hover:text-burdeos/70">
                         {seccion?.nombre_es ?? slug}
                       </h3>
                       <div className="flex-1 h-px bg-burdeos/15" />
                       <span className="text-xs text-carbon/40">{items.length} plato{items.length !== 1 ? "s" : ""}</span>
-                    </div>
+                    </button>
+                    {!collapsed && (
+                      <div className="grid gap-3">
+                        {items.map((plato) => (
+                          <SortablePlatoItem
+                            key={plato.id}
+                            plato={plato}
+                            secciones={secciones}
+                            isTogglingId={isTogglingId}
+                            onEdit={handleEditPlato}
+                            onDelete={handleDeleteClick}
+                            onToggle={handleToggleActive}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+              {huerfanos.length > 0 && (
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => toggleSection("__huerfanos__")}
+                    className="w-full flex items-center gap-3 mb-3 group"
+                  >
+                    <ChevronDown
+                      size={15}
+                      className={`text-carbon/30 transition-transform duration-200 ${collapsedSections.has("__huerfanos__") ? "-rotate-90" : ""}`}
+                    />
+                    <h3 className="text-sm font-semibold tracking-widest uppercase text-carbon/40">
+                      Sin sección
+                    </h3>
+                    <div className="flex-1 h-px bg-carbon/10" />
+                  </button>
+                  {!collapsedSections.has("__huerfanos__") && (
                     <div className="grid gap-3">
-                      {items.map((plato) => (
+                      {huerfanos.map((plato) => (
                         <SortablePlatoItem
                           key={plato.id}
                           plato={plato}
@@ -360,30 +414,7 @@ export default function ListaPlatos({ platos: initialPlatos, secciones, onRefres
                         />
                       ))}
                     </div>
-                  </div>
-                )
-              })}
-              {huerfanos.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <h3 className="text-sm font-semibold tracking-widest uppercase text-carbon/40">
-                      Sin sección
-                    </h3>
-                    <div className="flex-1 h-px bg-carbon/10" />
-                  </div>
-                  <div className="grid gap-3">
-                    {huerfanos.map((plato) => (
-                      <SortablePlatoItem
-                        key={plato.id}
-                        plato={plato}
-                        secciones={secciones}
-                        isTogglingId={isTogglingId}
-                        onEdit={handleEditPlato}
-                        onDelete={handleDeleteClick}
-                        onToggle={handleToggleActive}
-                      />
-                    ))}
-                  </div>
+                  )}
                 </div>
               )}
             </div>
