@@ -1,6 +1,5 @@
 import { getTranslations, getLocale } from "next-intl/server"
 import Link from "next/link"
-import { Instagram } from "lucide-react"
 
 export default async function Footer() {
   const [t, locale] = await Promise.all([
@@ -46,7 +45,11 @@ export default async function Footer() {
                 aria-label="Instagram de Casa Goyo"
                 className="text-crema/40 hover:text-dorado transition-colors duration-200"
               >
-                <Instagram size={18} />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <circle cx="12" cy="12" r="4"/>
+                  <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+                </svg>
               </a>
             </div>
           </div>
