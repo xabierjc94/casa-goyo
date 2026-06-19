@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import Link from "next/link"
 
+function getErrorMessage(errorMsg: string): string {
+  // Don't expose specific auth errors to user - prevent information leakage
+  return "Credenciales inválidas o usuario no existe"
+}
+
 export default function AdminLoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState("")
@@ -26,7 +31,7 @@ export default function AdminLoginPage() {
       })
 
       if (signInError) {
-        setError(signInError.message || "Error al iniciar sesión")
+        setError(getErrorMessage(signInError.message))
         setLoading(false)
         return
       }

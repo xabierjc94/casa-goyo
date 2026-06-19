@@ -5,6 +5,7 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { useState } from "react"
 import { Menu, X, LogOut } from "lucide-react"
+import { toast } from "sonner"
 
 const ADMIN_LINKS = [
   { href: "/admin", label: "Panel", icon: "📊" },
@@ -29,6 +30,7 @@ export default function AdminSidebar() {
       router.refresh()
     } catch (error) {
       console.error("Error logging out:", error)
+      toast.error("No se pudo cerrar sesión. Intenta de nuevo.")
       setLoggingOut(false)
     }
   }
