@@ -85,7 +85,7 @@ export default async function InfoPage({ params }: { params: Promise<{ locale: s
         <div className="mt-12 border border-burdeos/10 overflow-hidden" style={{ height: 260 }}>
           <iframe
             src={`https://maps.google.com/maps?q=${encodeURIComponent(info.direccion)}&output=embed`}
-            className="w-full h-full grayscale opacity-80 hover:opacity-100 transition-opacity duration-300"
+            className="w-full h-full opacity-90 hover:opacity-100 transition-opacity duration-300"
             loading="lazy"
             title="Localización del restaurante"
           />
