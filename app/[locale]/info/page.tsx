@@ -71,12 +71,7 @@ export default async function InfoPage({ params }: { params: Promise<{ locale: s
 
         {horario && (
           <InfoRow icon={<Clock size={15} className="text-dorado mt-0.5 shrink-0" />} label={t("horario")}>
-            <pre
-              className="whitespace-pre-wrap leading-relaxed text-carbon/80 text-sm"
-              style={{ fontFamily: "var(--font-josefin), sans-serif" }}
-            >
-              {horario}
-            </pre>
+            <HorarioDisplay horario={horario} />
           </InfoRow>
         )}
       </div>
@@ -91,6 +86,54 @@ export default async function InfoPage({ params }: { params: Promise<{ locale: s
           />
         </div>
       )}
+    </div>
+  )
+}
+
+function HorarioDisplay({ horario }: { horario: string }) {
+  const lines = horario.split("\n").filter(Boolean)
+
+  return (
+    <div className="space-y-0">
+      {lines.map((line, i) => {
+        const colonIdx = line.indexOf(": ")
+        if (colonIdx === -1) return (
+          <p key={i} className="text-[11px] italic text-carbon/40 pt-3 mt-1"
+            style={{ fontFamily: "var(--font-josefin), sans-serif" }}>
+            {line}
+          </p>
+        )
+
+        const day   = line.slice(0, colonIdx)
+        const hours = line.slice(colonIdx + 2)
+        const isNote   = /aviso|note|nota/i.test(day)
+        const isClosed = /cerrado|closed/i.test(hours)
+
+        if (isNote) return (
+          <p key={i} className="text-[11px] italic text-carbon/40 pt-3 mt-1 border-t border-burdeos/8"
+            style={{ fontFamily: "var(--font-josefin), sans-serif" }}>
+            ※ {hours}
+          </p>
+        )
+
+        return (
+          <div key={i}
+            className="flex items-baseline justify-between gap-6 py-2.5 border-b border-burdeos/6 last:border-0">
+            <span
+              className="text-[11px] tracking-[0.15em] uppercase text-carbon/55 shrink-0"
+              style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+            >
+              {day}
+            </span>
+            <span
+              className={`text-[1.05rem] font-light tabular-nums ${isClosed ? "text-carbon/30 italic text-sm" : "text-carbon"}`}
+              style={{ fontFamily: "var(--font-cormorant), Georgia, serif" }}
+            >
+              {hours}
+            </span>
+          </div>
+        )
+      })}
     </div>
   )
 }
