@@ -17,6 +17,14 @@ const josefin = Josefin_Sans({
   display: "swap",
 })
 
+export const metadata: Metadata = {
+  title: "Restaurante Casa Goyo — Alcocer",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+  },
+}
+
 export default function RootLayout({
   children,
 }: {
