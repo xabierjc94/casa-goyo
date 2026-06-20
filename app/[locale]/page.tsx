@@ -134,11 +134,13 @@ export default async function CartaPage({ params }: { params: Promise<{ locale: 
         // Get all subsections that belong to this section
         const hijosDeEsta = subseccionesByPadre.get(seccion.slug) ?? []
 
-        // Build subsection data
-        const hijos = hijosDeEsta.map((hijo) => ({
-          seccion: hijo,
-          platos: platosBySeccion.get(hijo.slug) ?? [],
-        }))
+        // Build subsection data — only include subsections that have dishes
+        const hijos = hijosDeEsta
+          .map((hijo) => ({
+            seccion: hijo,
+            platos: platosBySeccion.get(hijo.slug) ?? [],
+          }))
+          .filter(({ platos }) => platos.length > 0)
 
         return (
           <SeccionCarta
