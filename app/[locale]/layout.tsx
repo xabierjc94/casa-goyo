@@ -28,6 +28,18 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
+      {/* Fixed landscape background — photo in public/bg.jpg */}
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          backgroundImage: "url('/bg3.jpeg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center 35%",
+        }}
+      />
+      {/* Cream overlay for readability */}
+      <div className="fixed inset-0 -z-10 bg-crema/82" />
+
       <Navbar />
       <main>{children}</main>
       <Footer />
