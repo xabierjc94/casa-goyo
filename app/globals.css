@@ -21,12 +21,6 @@
   --color-carbon-soft:  #3D3530;
   --color-muted-warm:   #8B7355;
 
-  /* ── Landscape palette — los campos de Alcocer ── */
-  --color-cielo:    #1E65B5;  /* deep sky from the photos */
-  --color-campo:    #4E8B5A;  /* green wheat fields */
-  --color-turquesa: #38B0B0;  /* Buendía reservoir */
-  --color-tierra:   #C07A35;  /* ochre dirt paths */
-
   /* ── Typography ── */
   --font-display: var(--font-cormorant);
   --font-sans:    var(--font-josefin);

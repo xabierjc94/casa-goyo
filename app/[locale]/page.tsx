@@ -79,33 +79,7 @@ export default async function CartaPage({ params }: { params: Promise<{ locale: 
   })
 
   return (
-    <>
-    {/* Landscape hero — inspired by the fields, sky and reservoir of Alcocer */}
-    <div className="relative w-full overflow-hidden" style={{ height: "200px" }}>
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(180deg, #1E65B5 0%, #2B8FC5 22%, #37B0B0 43%, #69AB65 64%, #BF7A35 80%, #EFD8B5 92%, #FAF0E6 100%)"
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E\")",
-          opacity: "0.45"
-        }}
-      />
-      <div className="absolute bottom-7 inset-x-0 flex justify-center">
-        <p
-          className="text-[9px] tracking-[0.5em] uppercase text-white/50"
-          style={{ fontFamily: "var(--font-josefin), sans-serif" }}
-        >
-          Alcocer · Guadalajara
-        </p>
-      </div>
-    </div>
-
-    <main className="max-w-3xl mx-auto px-4 pt-10 pb-16">
+    <main className="max-w-3xl mx-auto px-4 pt-14 pb-16">
       {/* Page Title */}
       <div className="text-center mb-12">
         <h1
@@ -179,6 +153,5 @@ export default async function CartaPage({ params }: { params: Promise<{ locale: 
         )
       })}
     </main>
-    </>
   )
 }
