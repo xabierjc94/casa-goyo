@@ -12,7 +12,12 @@
     "sin_gluten": "Gluten Free",
     "alergenos": "Allergens",
     "encargo_nota": "Ask for availability",
-    "llevar": "Takeaway"
+    "llevar": "Takeaway",
+    "alergenos_reg": "Regulation (EU) No. 1169/2011",
+    "alergenos_titulo": "Establishment with information available on food allergies and intolerances",
+    "alergenos_nota": "Please ask our staff for information · Thank you",
+    "pan_label": "Bread service",
+    "nav_aria": "Menu sections"
   },
   "reservas": {
     "titulo": "Book a Table",
@@ -32,12 +37,17 @@
     "horario": "Opening Hours",
     "direccion": "Address",
     "telefono": "Phone",
+    "email": "Email",
     "como_llegar": "How to Get Here"
   },
   "galeria": {
     "titulo": "Gallery"
   },
   "footer": {
-    "derechos": "All rights reserved"
+    "derechos": "All rights reserved",
+    "descripcion": "Traditional Castilian cuisine in the heart of La Alcarria",
+    "paginas": "Pages",
+    "contacto": "Contact",
+    "desarrollado": "Developed by javi.dev"
   }
 }

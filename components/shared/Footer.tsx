@@ -2,8 +2,9 @@ import { getTranslations, getLocale } from "next-intl/server"
 import Link from "next/link"
 
 export default async function Footer() {
-  const [t, locale] = await Promise.all([
+  const [t, tNav, locale] = await Promise.all([
     getTranslations("footer"),
+    getTranslations("nav"),
     getLocale(),
   ])
 
@@ -35,7 +36,7 @@ export default async function Footer() {
               className="text-crema/40 text-xs leading-relaxed"
               style={{ fontFamily: "var(--font-josefin), sans-serif" }}
             >
-              Cocina tradicional castellana<br />en el corazón de la Alcarria
+              {t("descripcion")}
             </p>
             <div className="mt-5 flex items-center gap-3">
               <a
@@ -65,13 +66,13 @@ export default async function Footer() {
               className="text-[9px] tracking-[0.25em] uppercase text-dorado mb-4"
               style={{ fontFamily: "var(--font-josefin), sans-serif" }}
             >
-              Páginas
+              {t("paginas")}
             </p>
             <ul className="space-y-2.5">
               {[
-                { href: `/${locale}`,         label: "Carta" },
-                { href: `/${locale}/info`,    label: "Información" },
-                { href: `/${locale}/galeria`, label: "Galería" },
+                { href: `/${locale}`,         label: tNav("carta") },
+                { href: `/${locale}/info`,    label: tNav("info") },
+                { href: `/${locale}/galeria`, label: tNav("galeria") },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link
@@ -92,7 +93,7 @@ export default async function Footer() {
               className="text-[9px] tracking-[0.25em] uppercase text-dorado mb-4"
               style={{ fontFamily: "var(--font-josefin), sans-serif" }}
             >
-              Contacto
+              {t("contacto")}
             </p>
             <address
               className="not-italic text-crema/50 text-xs leading-relaxed space-y-1.5"
@@ -122,7 +123,7 @@ export default async function Footer() {
               rel="noopener noreferrer"
               className="hover:text-dorado/60 transition-colors duration-200"
             >
-              Desarrollado por javi.dev
+              {t("desarrollado")}
             </a>
           </p>
           <div

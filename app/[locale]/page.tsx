@@ -96,27 +96,24 @@ export default async function CartaPage({ params }: { params: Promise<{ locale: 
           style={{ fontFamily: "var(--font-josefin), sans-serif" }}
         >
           <p className="text-[9px] tracking-[0.18em] uppercase text-burdeos/60">
-            Reglamento (UE) N.º 1169/2011
+            {t("alergenos_reg")}
           </p>
           <p className="text-[11px] tracking-[0.12em] uppercase text-carbon/70 font-medium leading-snug">
-            Establecimiento con información disponible
-          </p>
-          <p className="text-[11px] tracking-[0.12em] uppercase text-carbon/70 font-medium leading-snug">
-            en materia de alergias e intolerancias alimentarias
+            {t("alergenos_titulo")}
           </p>
           <p className="text-[10px] tracking-[0.1em] uppercase text-carbon/50 pt-1">
-            Soliciten información a nuestro personal · Muchas gracias
+            {t("alergenos_nota")}
           </p>
         </div>
 
-        {/* Pan notice */}
+        {/* Bread notice */}
         <div
           className="mt-3 mx-auto max-w-sm flex items-center justify-center gap-2 bg-dorado/8 border border-dorado/25 rounded px-5 py-2.5"
           style={{ fontFamily: "var(--font-josefin), sans-serif" }}
         >
           <span className="text-dorado text-sm">◆</span>
           <p className="text-[10px] tracking-[0.14em] uppercase text-carbon/65">
-            Servicio de pan · <span className="font-semibold text-carbon/80">1,30 €</span>
+            {t("pan_label")} · <span className="font-semibold text-carbon/80">1,30 €</span>
           </p>
         </div>
       </div>

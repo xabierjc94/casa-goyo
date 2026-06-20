@@ -1,6 +1,6 @@
 "use client"
 
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useEffect, useRef, useState } from "react"
 import type { Seccion } from "@/lib/supabase/types"
 
@@ -8,6 +8,7 @@ type Props = { secciones: Seccion[] }
 
 export default function NavCarta({ secciones }: Props) {
   const locale             = useLocale() as "es" | "en"
+  const t                  = useTranslations("carta")
   const [active, setActive] = useState<string>("")
   const navRef             = useRef<HTMLDivElement>(null)
 
@@ -39,7 +40,7 @@ export default function NavCarta({ secciones }: Props) {
     <nav
       ref={navRef}
       className="sticky top-[68px] z-40 bg-crema/95 backdrop-blur-sm border-b border-burdeos/8 overflow-x-auto scrollbar-hide"
-      aria-label="Secciones de la carta"
+      aria-label={t("nav_aria")}
     >
       <div className="flex gap-0 min-w-max mx-auto px-6">
         {secciones.map((s) => {

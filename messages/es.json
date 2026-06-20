@@ -12,7 +12,12 @@
     "sin_gluten": "Sin Gluten",
     "alergenos": "Alérgenos",
     "encargo_nota": "Consultar disponibilidad",
-    "llevar": "Para llevar"
+    "llevar": "Para llevar",
+    "alergenos_reg": "Reglamento (UE) N.º 1169/2011",
+    "alergenos_titulo": "Establecimiento con información disponible en materia de alergias e intolerancias alimentarias",
+    "alergenos_nota": "Soliciten información a nuestro personal · Muchas gracias",
+    "pan_label": "Servicio de pan",
+    "nav_aria": "Secciones de la carta"
   },
   "reservas": {
     "titulo": "Reservar Mesa",
@@ -32,12 +37,17 @@
     "horario": "Horario",
     "direccion": "Dirección",
     "telefono": "Teléfono",
+    "email": "Email",
     "como_llegar": "Cómo Llegar"
   },
   "galeria": {
     "titulo": "Galería"
   },
   "footer": {
-    "derechos": "Todos los derechos reservados"
+    "derechos": "Todos los derechos reservados",
+    "descripcion": "Cocina tradicional castellana en el corazón de la Alcarria",
+    "paginas": "Páginas",
+    "contacto": "Contacto",
+    "desarrollado": "Desarrollado por javi.dev"
   }
 }
