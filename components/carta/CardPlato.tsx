@@ -60,15 +60,19 @@ export default function CardPlato({ plato, locale, index = 0 }: Props) {
               · {labels.sinGluten}
             </span>
           )}
-          {plato.alergenos.map((a) => (
-            <span
-              key={a}
-              className="text-[0.65rem] tracking-[0.12em] uppercase text-muted-warm/70"
-              style={{ fontFamily: "var(--font-josefin), sans-serif" }}
-            >
-              {ALERGENOS_LABELS[a]?.[locale] ?? a}
-            </span>
-          ))}
+          {plato.alergenos.map((a) => {
+            const info = ALERGENOS_LABELS[a]
+            return (
+              <span
+                key={a}
+                className="flex items-center gap-0.5 text-[0.65rem] tracking-[0.12em] uppercase text-muted-warm/70"
+                style={{ fontFamily: "var(--font-josefin), sans-serif" }}
+              >
+                {info?.symbol && <span className="text-[0.75rem] leading-none">{info.symbol}</span>}
+                {info?.[locale] ?? a}
+              </span>
+            )
+          })}
         </div>
       )}
     </article>
