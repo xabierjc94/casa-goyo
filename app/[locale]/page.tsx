@@ -4,7 +4,7 @@ import SeccionCarta from "@/components/carta/SeccionCarta"
 import NavCarta from "@/components/carta/NavCarta"
 import type { Plato, Seccion } from "@/lib/supabase/types"
 
-export const revalidate = 3600 // re-fetch from Supabase at most once per hour
+export const revalidate = 60 // re-fetch from Supabase every 60 seconds
 
 export function generateStaticParams() {
   return [{ locale: "es" }, { locale: "en" }]
