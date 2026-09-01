@@ -27,5 +27,5 @@ export const ALERGENOS_LABELS: Record<string, { es: string; en: string; symbol: 
   sesamo:       { es: "Sésamo",        en: "Sesame",       symbol: "🌱" },
   sulfitos:     { es: "Sulfitos",      en: "Sulphites",    symbol: "🍇" },
   altramuces:   { es: "Altramuces",    en: "Lupin",        symbol: "🌸" },
-  moluscos:     { es: "Moluscos",      en: "Molluscs",     symbol: "🐚" },
+  moluscos:     { es: "Moluscos",      en: "Molluscs",     symbol: "🦪" },
 }
