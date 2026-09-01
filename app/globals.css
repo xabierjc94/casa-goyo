@@ -182,6 +182,18 @@
     to   { opacity: 1; }
   }
 
+  /* Attention pulse — vacation notice */
+  .animate-parpadeo {
+    animation: parpadeo 1.8s ease-in-out infinite;
+  }
+  @keyframes parpadeo {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.42; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-parpadeo { animation: none; }
+  }
+
   /* Stagger delays */
   .delay-100 { animation-delay: 0.10s; }
   .delay-200 { animation-delay: 0.20s; }

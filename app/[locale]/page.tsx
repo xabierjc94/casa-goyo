@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 import SeccionCarta from "@/components/carta/SeccionCarta"
 import NavCarta from "@/components/carta/NavCarta"
+import AvisoVacaciones from "@/components/shared/AvisoVacaciones"
 import type { Plato, Seccion } from "@/lib/supabase/types"
 
 export const revalidate = 60 // re-fetch from Supabase every 60 seconds
@@ -89,6 +90,9 @@ export default async function CartaPage({ params }: { params: Promise<{ locale: 
           {t("titulo")}
         </h1>
         <div className="divider-ornamental max-w-xs mx-auto">◆</div>
+
+        {/* Vacation closure notice */}
+        <AvisoVacaciones locale={locale} destacado />
 
         {/* Allergen notice — Reg. EU 1169/2011 */}
         <div
